@@ -1,1 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 @import "tailwindcss";
+
+@theme {
+    --font-poppins: 'Roboto', sans-serif;
+    --color-black: #191919;
+    --color-white: #F5F5F5;
+    --color-primary: #237A36;
+    --color-secondary: #237A36;
+}
+
+body {
+    background-color: var(--color-white);
+    color: var(--color-black);
+    font-family: var(--font-poppins)
+}
+
+button {
+    @apply transition duration-500 cursor-pointer;
+}
