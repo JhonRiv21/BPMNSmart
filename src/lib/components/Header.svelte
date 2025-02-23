@@ -11,8 +11,8 @@
         </a>
 
         <div class="hidden sm:block flex-row items-center gap-4">
-            <button class="px-5 py-2 hover:bg-gray-200 rounded-md">Crear cuenta</button>            
-            <button class="px-5 py-2 text-white bg-primary rounded-md hover:bg-primary/90">Iniciar sesión</button>            
+            <a href="/create-account" class="button px-5 mx-2 py-2.5 hover:bg-gray-200 rounded-md">Crear cuenta</a>            
+            <a href="/login" class="button px-5 py-2.5 text-white bg-primary rounded-md hover:bg-primary/90">Iniciar sesión</a>            
         </div>
     </div>
 </header>
