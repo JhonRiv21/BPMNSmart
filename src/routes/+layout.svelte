@@ -19,7 +19,7 @@
     })
 </script>
 
-<Header redirection={page.url.pathname.includes('/private') ? '/home' : '/'} />
+<Header />
 <div class="max-w-screen-2xl mx-auto"> 
     {@render children()}
 </div>

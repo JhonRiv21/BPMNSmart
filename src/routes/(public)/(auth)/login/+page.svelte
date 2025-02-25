@@ -1,12 +1,12 @@
 <script lang="ts">
     import { enhance } from "$app/forms";
-
-
 </script>
 
 <section>
     <div class="flex flex-col justify-center items-center h-full p-5 max-w-xs mx-auto">        
         <form method="POST" action="?/login" use:enhance class="space-y-5 pt-5">
+            <h5 class="text-2xl font-medium text-center">Iniciar sesión</h5>
+            <div class="border-b-2"></div>
             <div class="flex flex-col">
                 <label for="email" class="text-lg">Correo electrónico:</label>
                 <input id="email" name="email" required class="border px-2.5 py-2 rounded-md" placeholder="Inserte">
@@ -26,7 +26,7 @@
                         Inicia sesión con Google
                     </span>
                 </button>
-                <button type="button">¿Olvidaste tu contraseña?</button>
+                <button type="button" class="hover:underline">¿Olvidaste tu contraseña?</button>
                 <div class="text-center">¿Aún no tienes cuenta en BPMNSmart? <a class="md:px-5 py-2.5 text-primary font-medium" href="/create-account">¡Créala aquí!</a></div>
             </div>
         </form>

@@ -134,8 +134,9 @@
             >
         </p>
 
-        <button
-            class="px-12 py-3 gap-2 font-semibold text-white bg-primary rounded-md hover:bg-primary/90 mx-auto flex justify-center items-center"
+        <a
+            href="/create-account"
+            class="px-12 max-w-max py-3 gap-2 font-semibold text-white bg-primary rounded-md hover:bg-primary/90 mx-auto flex justify-center items-center"
         >
             <span>
                 <svg width="20" height="20" viewBox="0 0 512 512"
@@ -146,7 +147,7 @@
                 >
             </span>
             Registrarse ahora
-        </button>
+        </a>
     </div>
 </section>
 
