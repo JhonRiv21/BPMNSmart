@@ -3,7 +3,6 @@
     import { onMount } from 'svelte'
     import '../app.css'
     import Header from '$lib/components/Header.svelte';
-    import { page } from '$app/state';
 
     let { data, children } = $props()
     let { session, supabase } = $derived(data)

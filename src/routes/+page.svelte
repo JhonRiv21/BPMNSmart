@@ -6,7 +6,7 @@
         Section3Landing,
         Section4Landing,
     } from "$lib/index";
-    import { dataBenefits, questions } from "./datastatic";
+    import { dataBenefits, questions } from "$lib/resources/datastatic";
 
     let questionExpanded: any = null;
 
