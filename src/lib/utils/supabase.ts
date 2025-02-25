@@ -1,6 +1,11 @@
+import "dotenv/config";
 import { createClient } from "@supabase/supabase-js";
 
-const SupabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
-const SupabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+const SupabaseUrl = process.env.PUBLIC_SUPABASE_URL;
+const SupabaseAnonKey = process.env.PUBLIC_SUPABASE_ANON_KEY;
 
-export const supabase = createClient(SupabaseUrl, SupabaseAnonKey)
+if (!SupabaseUrl || !SupabaseAnonKey) {
+    throw new Error("Faltan las variables de entorno");
+}
+
+export const supabase = createClient(SupabaseUrl, SupabaseAnonKey);
