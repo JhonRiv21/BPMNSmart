@@ -9,12 +9,12 @@
             <Logo />
         </a>
 
-        {#if !page.url.pathname.includes('/private')}
+        {#if !page.url.pathname.includes('home') || !page.url.pathname.includes('diagram')}
             <div class="flex flex-row items-center gap-x-4">
                 {#if page.url.pathname !== '/home'}
-                    <button aria-label="logout" class="button hover:bg-primary/20 p-2.5 rounded-md">
+                    <a href="/home" aria-label="home" class="button hover:bg-primary/20 p-2.5 rounded-md">
                         <svg width="25" height="25" viewBox="0 0 24 24"><path fill="currentColor" d="M10 20v-6h4v6h5v-8h3L12 3L2 12h3v8z"/></svg>
-                    </button>
+                    </a>
                 {/if}            
                 <button aria-label="logout" class="button bg-secondary/10 hover:bg-secondary/40 p-2.5 rounded-md">
                     <svg width="25" height="25" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><path d="M14 8V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2v-2"/><path d="M9 12h12l-3-3m0 6l3-3"/></g></svg>
