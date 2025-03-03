@@ -43,7 +43,6 @@ export const actions: Actions = {
         if (error) {
             console.error(error)
         } else {
-            load
             return { success: true, id };
         }
     },
