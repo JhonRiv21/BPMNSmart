@@ -3,9 +3,21 @@
     import BpmnModeler from "bpmn-js/lib/Modeler";
     import defaultDiagram from "$lib/resources/defaultDiagram.bpmn?raw";
     import type CommandStack from "diagram-js/lib/command/CommandStack";
+    // import { supabase } from "$lib/utils/supabase";
 
     let modeler: BpmnModeler | null = null;
     let container: HTMLDivElement | null = null;
+
+    const saveDiagram = async () => {
+        // const canvasElement = document.getElementById('js-canvas');
+
+        // if (canvasElement) {
+        //     const { data, error } = await supabase
+        //         .from('bpmn')
+        //         .insert('')
+        //         .select('')
+        // }
+    }
 
     onMount(async () => {
         if (!container) return;
