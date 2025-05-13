@@ -1,0 +1,16 @@
+node_modules
+
+# Output
+.output
+.wrangler
+/build
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.*
+!.env.example
+!.env.test

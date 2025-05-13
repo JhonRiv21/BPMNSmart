@@ -1,0 +1,29 @@
+{
+  "name": "bpmnsmart",
+  "version": "1.0.0",
+  "description": "Gestor BPMN con Railway, SvelteKit y Express.",
+  "homepage": "https://github.com/JhonRiv21/BPMNSmart#readme",
+  "bugs": {
+    "url": "https://github.com/JhonRiv21/BPMNSmart/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JhonRiv21/BPMNSmart.git"
+  },
+  "license": "ISC",
+  "author": "Jhon Rivero",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "type": "module",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "concurrently \"npm run start --workspace frontend\" \"npm run start --workspace backend\""
+  },
+  "devDependencies": {
+    "concurrently": "^7.0.0"
+  }
+}
