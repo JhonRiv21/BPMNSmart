@@ -1,9 +1,14 @@
 node_modules
 
+# Prisma
+/src/generated/
+/prisma/generated/
+
 # Output
 .output
 .wrangler
-/build
+dist/
+build/
 
 # OS
 .DS_Store
@@ -14,3 +19,10 @@ Thumbs.db
 .env.*
 !.env.example
 !.env.test
+.env.local
+.env.*.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
