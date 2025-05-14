@@ -5,10 +5,4 @@ import image3 from '$lib/assets/image3.png';
 import image4 from '$lib/assets/image4.png';
 import logo from '$lib/assets/logo.png';
 
-export {
-  image1,
-  image2,
-  image3,
-  image4,
-  logo
-};
+export { image1, image2, image3, image4, logo };

@@ -1,19 +1,19 @@
 @import 'tailwindcss';
 
 @theme {
-  --color-background: #F5F5F5;
-  --color-letters: #191919;
-  --color-green: #237A36;
+	--color-background: #f5f5f5;
+	--color-letters: #191919;
+	--color-green: #237a36;
 
-  --font-roboto: "Roboto", sans-serif;
+	--font-roboto: 'Roboto', sans-serif;
 }
 
 body {
-  font-family: var(--font-roboto);
-  background-color: var(--color-background);
-  color: var(--color-letters)
+	font-family: var(--font-roboto);
+	background-color: var(--color-background);
+	color: var(--color-letters);
 }
 
 .button-principal {
-  @apply px-8 py-2.5 text-lg rounded-md bg-green text-background hover:bg-green/80 transition duration-500
+	@apply bg-green text-background hover:bg-green/80 rounded-md px-8 py-2.5 text-lg transition duration-500;
 }

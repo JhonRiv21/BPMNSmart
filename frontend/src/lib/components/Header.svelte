@@ -1,15 +1,15 @@
 <script lang="ts">
-  import Logo from './Logo.svelte';
+	import Logo from './Logo.svelte';
 </script>
 
-<header class="px-5 py-3 w-ful mx-auto shadow-md">
-  <div class="flex flex-row gap-4 justify-between items-center max-w-screen-2xl mx-auto">
-    <div class="w-full">
-      <Logo />
-    </div>
-    
-    <nav class="w-full max-w-max flex flex-row gap-6">
-      <a href="#s" class="button-principal">Ingresar</a>
-    </nav>
-  </div>
+<header class="w-ful mx-auto px-5 py-3 shadow-md">
+	<div class="mx-auto flex max-w-screen-2xl flex-row items-center justify-between gap-4">
+		<div class="w-full">
+			<Logo />
+		</div>
+
+		<nav class="flex w-full max-w-max flex-row gap-6">
+			<a href="#s" class="button-principal">Ingresar</a>
+		</nav>
+	</div>
 </header>
