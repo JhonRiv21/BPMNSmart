@@ -1,11 +1,8 @@
 <script lang="ts">
   import Logo from './Logo.svelte';
-
-  let menuOpen = $state(false);
-
 </script>
 
-<header class="px-5 py-5 w-ful mx-auto shadow-md">
+<header class="px-5 py-3 w-ful mx-auto shadow-md">
   <div class="flex flex-row gap-4 justify-between items-center max-w-screen-2xl mx-auto">
     <div class="w-full">
       <Logo />
