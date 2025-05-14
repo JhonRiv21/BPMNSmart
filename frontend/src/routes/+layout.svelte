@@ -5,4 +5,6 @@
 </script>
 
 <Header />
-{@render children()}
+<section class="max-w-screen-2xl mx-auto">
+	{@render children()}
+</section>
