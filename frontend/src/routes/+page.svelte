@@ -64,7 +64,7 @@
 					¡Sin necesidad de registro!
 				</p>
 				<div class="flex justify-center">
-					<a href="/demo" class="button-principal px-14 py-3.5! sm:px-20!">¡Prueba ahora!</a>
+					<a href="/demo" target="_blank" class="button-principal px-14 py-3.5! sm:px-20!">¡Prueba ahora!</a>
 				</div>
 			</div>
 		</div>
@@ -95,7 +95,7 @@
 					>
 				</p>
 				<div class="flex justify-center">
-					<a href="#s" class="button-principal px-12 py-3.5! sm:px-16!">Registrarse ahora</a>
+					<a href="/login" class="button-principal px-12 py-3.5! sm:px-16!">Registrarse ahora</a>
 				</div>
 			</div>
 		</div>

@@ -9,7 +9,7 @@
 		</div>
 
 		<nav class="flex w-full max-w-max flex-row gap-6">
-			<a href="#s" class="button-principal">Ingresar</a>
+			<a href="/login" class="button-principal">Ingresar</a>
 		</nav>
 	</div>
 </header>
