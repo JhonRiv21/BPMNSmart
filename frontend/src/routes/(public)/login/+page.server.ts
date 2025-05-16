@@ -56,7 +56,7 @@ export const actions: Actions = {
       };
     }
 
-    console.log('✅ Datos válidos:', result.data);
+    console.log('✅ Datos válidos login:', result.data);
 
     // Guardar en DB, crear sesión, etc.
 

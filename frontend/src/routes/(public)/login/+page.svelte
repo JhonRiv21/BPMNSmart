@@ -4,7 +4,7 @@
 
   let activeTab = $state('login');
 
-  const { form } = $props();
+  const { form }: { form: FormResult } = $props();
 
 </script>
 
@@ -145,7 +145,7 @@
 
           <button
             type="submit"
-            class="w-full bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg py-2 transition-colors"
+            class="w-full bg-green hover:bg-green/80 text-white font-medium rounded-lg py-3 transition duration-500 cursor-pointer"
           >
             Crear cuenta
           </button>
