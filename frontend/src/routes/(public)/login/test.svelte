@@ -1,11 +1,18 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import type { FormResult } from './types.js';
+	import type { LoginFormResult, CreateFormResult} from './types.js';
 
   let activeTab = $state('login');
 
   const { form } = $props();
 
+  const loginForm = form?.action === 'login' ? form as LoginFormResult : null;
+  const createForm = form?.action === 'create' ? form as CreateFormResult : null;
+
+  $effect(() => {
+    if (form?.action === 'login') activeTab = 'login';
+    if (form?.action === 'create') activeTab = 'create';
+  })
 </script>
 
 <section class="flex justify-center mx-auto items-center flex-col py-8 max-w-sm space-y-5">
@@ -50,11 +57,11 @@
               name="emailLogin"
               id="emailLogin"
               placeholder="Inserte"
-              value={form?.data?.emailLogin ?? ''}
+              value={loginForm?.data?.emailLogin ?? ''}
               class="w-full border border-gray-400 rounded-lg px-3 py-2 mt-1"
             />
-            {#if form?.action === 'login' && form?.errors?.emailLogin}
-              <p class="text-red-500 text-sm">{form.errors.emailLogin[0]}</p>
+            {#if loginForm?.errors?.emailLogin}
+              <p class="text-red-500 text-sm">{loginForm.errors.emailLogin[0]}</p>
             {/if}
           </div>
           <div class="space-y-2">
@@ -64,11 +71,11 @@
               id="passwordLogin"
               type="password"
               placeholder="Inserte"
-              value={form?.data?.passwordLogin ?? ''}
+             value={loginForm?.data?.passwordLogin ?? ''}
               class="w-full border border-gray-400 rounded-lg px-3 py-2 mt-1"
             />
-            {#if form?.action === 'login' && form?.errors?.passwordLogin}
-              <p class="text-red-500 text-sm">{form.errors.passwordLogin[0]}</p>
+            {#if loginForm?.errors?.passwordLogin}
+              <p class="text-red-500 text-sm">{loginForm.errors.passwordLogin[0]}</p>
             {/if}
           </div>
           <button
@@ -90,29 +97,27 @@
               name="nameCreate"
               id="nameCreate"
               placeholder="Inserte"
-              value={form?.data?.nameCreate ?? ''}
+              value={createForm?.data?.nameCreate ?? ''}
               class="w-full border border-gray-400 rounded-lg px-3 py-2 mt-1"
             />
-            {#if form?.action === 'create' && form?.errors?.nameCreate}
-              <p class="text-red-500 text-sm">{form.errors.nameCreate[0]}</p>
+            {#if createForm?.errors?.nameCreate}
+              <p class="text-red-500 text-sm">{createForm.errors.nameCreate[0]}</p>
             {/if}
           </div>
-
           <div class="space-y-2">
-            <label for="lastNameCreate">Apellido</label>
+            <label for="nameCreate">Apellido</label>
             <input
               type="text"
               name="lastNameCreate"
               id="lastNameCreate"
               placeholder="Inserte"
-              value={form?.data?.lastNameCreate ?? ''}
               class="w-full border border-gray-400 rounded-lg px-3 py-2 mt-1"
+              value={createForm?.data?.lastNameCreate ?? ''}
             />
-            {#if form?.action === 'create' && form?.errors?.lastNameCreate}
-              <p class="text-red-500 text-sm">{form.errors.lastNameCreate[0]}</p>
+            {#if createForm?.errors?.lastNameCreate}
+              <p class="text-red-500 text-sm">{createForm.errors.lastNameCreate[0]}</p>
             {/if}
           </div>
-
           <div class="space-y-2">
             <label for="emailCreate">Email</label>
             <input
@@ -120,29 +125,27 @@
               name="emailCreate"
               id="emailCreate"
               placeholder="Inserte"
-              value={form?.data?.emailCreate ?? ''}
+              value={createForm?.data?.emailCreate ?? ''}
               class="w-full border border-gray-400 rounded-lg px-3 py-2 mt-1"
             />
-            {#if form?.action === 'create' && form?.errors?.emailCreate}
-              <p class="text-red-500 text-sm">{form.errors.emailCreate[0]}</p>
+            {#if createForm?.errors?.emailCreate}
+              <p class="text-red-500 text-sm">{createForm.errors.emailCreate[0]}</p>
             {/if}
           </div>
-
           <div class="space-y-2">
             <label for="passwordCreate">Contraseña</label>
             <input
-              type="password"
               name="passwordCreate"
               id="passwordCreate"
+              type="password"
               placeholder="Inserte"
-              value={form?.data?.passwordCreate ?? ''}
+             value={createForm?.data?.passwordCreate ?? ''}
               class="w-full border border-gray-400 rounded-lg px-3 py-2 mt-1"
             />
-            {#if form?.action === 'create' && form?.errors?.passwordCreate}
-              <p class="text-red-500 text-sm">{form.errors.passwordCreate[0]}</p>
+            {#if createForm?.errors?.passwordCreate}
+              <p class="text-red-500 text-sm">{createForm.errors.passwordCreate[0]}</p>
             {/if}
           </div>
-
           <button
             type="submit"
             class="w-full bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg py-2 transition-colors"
@@ -151,7 +154,6 @@
           </button>
         </form>
       {/if}
-
     </div>
   </div>
 </section>
