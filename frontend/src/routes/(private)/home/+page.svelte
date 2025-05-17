@@ -4,6 +4,7 @@
 	import Upload from '$lib/assets/icons/Upload.svelte';
 	import Cards from '$lib/components/Cards.svelte';
   import Modal from '$lib/components/Modal.svelte';
+  import { normalize } from '$lib/utils/utils';
 
 	const dummy = [
 		{
@@ -19,13 +20,11 @@
 	];
 
   let openModalCreate = $state(false);
-  let openModalImport = $state(true);
+  let openModalImport = $state(false);
+  let openModalDelete = $state(false);
 
   let filterData = $state(dummy);
   let searchDiagram = $state('');
-
-  const normalize = (str: string) =>
-    str.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase();
 
   const handleFilter = (searchItem: string) => {
     const search = normalize(searchItem);
@@ -83,7 +82,7 @@
             name={item.name}
             lastUpdated={item.lastTime}
             redirection={`/bpmn/${item.id}`}
-            trashAction={() => console.log('trash')}
+            trashAction={() => openModalDelete = true}
           />
         {/each}
       </div>
@@ -141,5 +140,18 @@
         </div>
       </div>
     </form>
+  </Modal>
+{/if}
+
+{#if openModalDelete}
+  <Modal
+    title="¿Desea eliminar el diagrama?"
+    text="Esta acción es irreversible"
+    textAction="Eliminar diagrama"
+    colorAction="green"
+    onCancel={() => openModalDelete = false}
+    onAction={() => openModalDelete = false}
+  >
+  <div></div>
   </Modal>
 {/if}

@@ -5,6 +5,7 @@
 	--color-letters: #191919;
 	--color-green: #237a36;
 	--color-blue: #165f83;
+	--color-red: #d11616;
 
 	--font-roboto: 'Roboto', sans-serif;
 }
@@ -21,4 +22,8 @@ body {
 
 .button-secondary {
 	@apply bg-blue text-background hover:bg-blue/80 cursor-pointer rounded-md px-8 py-2.5 text-lg transition duration-500;
+}
+
+.button-warning {
+	@apply bg-red text-background hover:bg-red/80 cursor-pointer rounded-md px-8 py-2.5 text-lg transition duration-500;
 }

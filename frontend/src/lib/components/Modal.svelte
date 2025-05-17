@@ -44,8 +44,8 @@
           </div>
         </div>
         <div class="bg-gray-50 mt-1 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-          <button onclick={onAction} type="button" class="inline-flex w-full justify-center rounded-md bg-{colorAction} px-5 py-2 font-medium text-white shadow-xs hover:bg-{colorAction}/80 sm:ml-3 sm:w-auto transition duration-500 cursor-pointer">{textAction}</button>
-          <button onclick={onCancel} type="button" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-5 py-2 font-medium text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-100 sm:mt-0 sm:w-auto transition duration-500 cursor-pointer">Cancelar</button>
+          <button onclick={onAction} type="button" class="inline-flex w-full justify-center rounded-md bg-{colorAction} px-5 py-2 font- text-white shadow-xs hover:bg-{colorAction}/80 sm:ml-3 sm:w-auto transition duration-500 cursor-pointer">{textAction}</button>
+          <button onclick={onCancel} type="button" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-5 py-2 font- text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-100 sm:mt-0 sm:w-auto transition duration-500 cursor-pointer">Cancelar</button>
         </div>
       </div>
     </div>
