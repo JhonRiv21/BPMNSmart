@@ -4,8 +4,8 @@
 	--color-background: #f5f5f5;
 	--color-letters: #191919;
 	--color-green: #237a36;
-	--color-blue: #165F83;
-	
+	--color-blue: #165f83;
+
 	--font-roboto: 'Roboto', sans-serif;
 }
 
@@ -16,5 +16,9 @@ body {
 }
 
 .button-principal {
-	@apply bg-green text-background hover:bg-green/80 rounded-md px-8 py-2.5 text-lg transition duration-500;
+	@apply bg-green text-background hover:bg-green/80 cursor-pointer rounded-md px-8 py-2.5 text-lg transition duration-500;
+}
+
+.button-secondary {
+	@apply bg-blue text-background hover:bg-blue/80 cursor-pointer rounded-md px-8 py-2.5 text-lg transition duration-500;
 }

@@ -64,7 +64,9 @@
 					¡Sin necesidad de registro!
 				</p>
 				<div class="flex justify-center">
-					<a href="/demo" target="_blank" class="button-principal px-14 py-3.5! sm:px-20!">¡Prueba ahora!</a>
+					<a href="/demo" target="_blank" class="button-principal px-14 py-3.5! sm:px-20!"
+						>¡Prueba ahora!</a
+					>
 				</div>
 			</div>
 		</div>
