@@ -36,3 +36,13 @@ export const findUserByEmail = (email: string) => {
     where: { email }
   });
 };
+
+export const authenticateUser = async (email: string, password: string) => {
+  const user = await prisma.user.findUnique({ where: { email } });
+  if (!user) return null;
+
+  const isPasswordValid = await bycript.compare(password, user.password);
+  if (!isPasswordValid) return null;
+
+  return user;
+};

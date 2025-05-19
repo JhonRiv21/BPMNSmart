@@ -1,7 +1,8 @@
-import { Request, Response } from "express";
+import { Request, RequestHandler, Response } from "express";
 import * as userService from '../services/user.service.ts'
+import jwt from 'jsonwebtoken'
 
-export const getAllUsers = async (req: Request, res: Response) => {
+export const getAllUsers: RequestHandler  = async (req: Request, res: Response) => {
   try {
     const user = await userService.getAllUsers();
     res.json(user);
@@ -29,3 +30,24 @@ export const createUser = async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Error al crear usuario' });
   }
 }
+
+export const loginUser = async (req: Request, res: Response) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ error: 'Email y password requeridos' });
+  };
+
+  const user = await userService.authenticateUser(email, password);
+
+  if (!user) return res.status(401).json({ error: 'Credenciales inválidas' });
+
+  const token = jwt.sign(
+    { id: user.id, email: user.email },
+    process.env.JWT_SECRET!,
+    { expiresIn: '2h' }
+  );
+
+  const { password: _, ...userWithoutPassword } = user;
+  res.json({ user: userWithoutPassword, token });
+};
