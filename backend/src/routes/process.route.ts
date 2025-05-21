@@ -18,5 +18,11 @@ router.put(
   verifyToken as RequestHandler,
   processController.updateProcess as RequestHandler
 );
+router.delete(
+  '/:id',
+  verifyToken as RequestHandler,
+  processController.deleteProcess as RequestHandler
+);
+
 
 export default router;

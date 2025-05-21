@@ -28,7 +28,7 @@ export const getProcessByIdForUser = async (id: string, userId: string) => {
   });
 };
 
-// Uodate process of the authenticated user by id
+// Delete process of the authenticated user by id
 export const updateProcessForUser = async (
   id: string,
   userId: string,
@@ -52,5 +52,22 @@ export const updateProcessForUser = async (
   return prisma.process.update({
     where: { id },
     data: updateData,
+  });
+};
+
+
+// Delete process of the authenticated user by id
+export const deleteProcessForUser = async (
+  id: string,
+  userId: string,
+) => {
+  const existing = prisma.process.findFirst({
+    where: { id, createdFor: userId },
+  });
+
+  if (!existing) return null;
+
+  return prisma.process.delete({
+    where: { id }
   });
 };

@@ -72,3 +72,31 @@ export const updateProcess = async (
     res.status(500).json({ error: 'Error al actualizar el proceso' });
   }
 };
+
+// Delete user process by id
+export const deleteProcess = async (
+  req: AuthenticatedRequest,
+  res: Response
+) => {
+  const { id } = req.params;
+  const userId = req.user?.id;
+
+  if (!userId) return res.status(401).json({ error: 'Usuario no autenticado' });
+
+  if (!id) {
+    return res.status(400).json({ error: 'No hay identificador para eliminar' });
+  }
+
+  try {
+    const deleted = await processService.deleteProcessForUser(id, userId);
+
+    if (!deleted)
+      return res
+        .status(404)
+        .json({ error: 'Proceso no encontrado o no autorizado' });
+
+    res.status(204).send();
+  } catch (e) {
+    res.status(500).json({ error: 'Error al eliminar el proceso' });
+  }
+};
