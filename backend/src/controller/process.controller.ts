@@ -2,6 +2,7 @@ import { Response } from 'express';
 import { AuthenticatedRequest } from '../middlewares/auth/auth.middleware';
 import * as processService from '../services/process.service.ts';
 
+// Get user process
 export const getMyProcess = async (
   req: AuthenticatedRequest,
   res: Response
@@ -18,6 +19,7 @@ export const getMyProcess = async (
   }
 };
 
+// Get user process by id
 export const getProcessById = async (
   req: AuthenticatedRequest,
   res: Response
@@ -38,6 +40,7 @@ export const getProcessById = async (
   }
 };
 
+// Update user process by id
 export const updateProcess = async (
   req: AuthenticatedRequest,
   res: Response

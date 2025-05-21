@@ -5,6 +5,7 @@ export interface AuthenticatedRequest extends Request {
   user?: { id: string; email: string };
 }
 
+// Verify valid token
 export const verifyToken = (
   req: AuthenticatedRequest,
   res: Response,

@@ -17,6 +17,7 @@ export const getUserProcesses = async (userId: string) => {
     },
   });
 };
+
 // Get processes of the authenticated user by id
 export const getProcessByIdForUser = async (id: string, userId: string) => {
   return prisma.process.findFirst({
