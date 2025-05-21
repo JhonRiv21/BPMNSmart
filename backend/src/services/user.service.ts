@@ -1,7 +1,8 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
-import bycript from 'bcrypt'
+import bycript from 'bcrypt';
 
+// Get all users - Require auth -
 export const getAllUsers = async () => {
   return prisma.user.findMany({
     select: {
@@ -9,11 +10,17 @@ export const getAllUsers = async () => {
       email: true,
       name: true,
       lastName: true,
-    }
+    },
   });
 };
 
-export const createUser = async ({ email, name, lastName, password }: {
+// Create new user
+export const createUser = async ({
+  email,
+  name,
+  lastName,
+  password,
+}: {
   email: string;
   name: string;
   lastName: string;
@@ -27,16 +34,18 @@ export const createUser = async ({ email, name, lastName, password }: {
       name,
       lastName,
       password: hashedPassword,
-    }
+    },
   });
 };
 
+// Get email for duplicates
 export const findUserByEmail = (email: string) => {
   return prisma.user.findUnique({
-    where: { email }
+    where: { email },
   });
 };
 
+// Login
 export const authenticateUser = async (email: string, password: string) => {
   const user = await prisma.user.findUnique({ where: { email } });
   if (!user) return null;

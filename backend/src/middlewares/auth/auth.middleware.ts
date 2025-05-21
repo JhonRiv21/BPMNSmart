@@ -1,8 +1,8 @@
-import { Request, Response, NextFunction } from "express";
-import jwt from 'jsonwebtoken'
+import { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
 
 export interface AuthenticatedRequest extends Request {
-  user?: { id: string, email: string }
+  user?: { id: string; email: string };
 }
 
 export const verifyToken = (
@@ -14,7 +14,7 @@ export const verifyToken = (
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({ error: 'Token no proporcionado' });
-  };
+  }
 
   const token = authHeader.split(' ')[1];
 
@@ -28,4 +28,4 @@ export const verifyToken = (
   } catch (err) {
     return res.status(401).json({ error: 'Token inválido o expirado' });
   }
-}
+};
