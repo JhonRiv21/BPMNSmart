@@ -2,7 +2,7 @@ import { Request, RequestHandler, Response } from "express";
 import * as userService from '../services/user.service.ts'
 import jwt from 'jsonwebtoken'
 
-export const getAllUsers: RequestHandler  = async (req: Request, res: Response) => {
+export const getAllUsers: RequestHandler  = async (_req: Request, res: Response) => {
   try {
     const user = await userService.getAllUsers();
     res.json(user);
