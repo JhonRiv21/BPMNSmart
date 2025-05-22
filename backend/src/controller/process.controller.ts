@@ -40,6 +40,35 @@ export const getProcessById = async (
   }
 };
 
+// Create user process
+export const createProcess = async (
+  req: AuthenticatedRequest,
+  res: Response
+) => {
+  const { name } = req.body;
+  const userId = req.user?.id;
+
+  if (!userId) return res.status(401).json({ error: 'Usuario no autenticado' });
+
+  if (!name) {
+    return res
+      .status(400)
+      .json({ error: 'Se requiere un nombre para el diagrama' });
+  }
+
+  try {
+    const created = await processService.createProcessForUser(userId, {
+      name,
+    });
+    res.status(201).json({
+      message: 'Proceso creado correctamente',
+      data: created,
+    });
+  } catch (e) {
+    res.status(500).json({ error: 'Error al crear el proceso' });
+  }
+};
+
 // Update user process by id
 export const updateProcess = async (
   req: AuthenticatedRequest,
@@ -67,7 +96,10 @@ export const updateProcess = async (
         .status(404)
         .json({ error: 'Proceso no encontrado o no autorizado' });
 
-    res.json(updated);
+    res.status(201).json({
+      message: 'Proceso actualizado correctamente',
+      data: updated,
+    });
   } catch (e) {
     res.status(500).json({ error: 'Error al actualizar el proceso' });
   }
@@ -84,7 +116,9 @@ export const deleteProcess = async (
   if (!userId) return res.status(401).json({ error: 'Usuario no autenticado' });
 
   if (!id) {
-    return res.status(400).json({ error: 'No hay identificador para eliminar' });
+    return res
+      .status(400)
+      .json({ error: 'No hay identificador para eliminar' });
   }
 
   try {

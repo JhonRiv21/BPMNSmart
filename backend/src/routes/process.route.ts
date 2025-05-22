@@ -13,6 +13,11 @@ router.get(
   verifyToken as RequestHandler,
   processController.getProcessById as RequestHandler
 );
+router.post(
+  '/create',
+  verifyToken as RequestHandler,
+  processController.createProcess as RequestHandler
+);
 router.put(
   '/:id',
   verifyToken as RequestHandler,
@@ -23,6 +28,5 @@ router.delete(
   verifyToken as RequestHandler,
   processController.deleteProcess as RequestHandler
 );
-
 
 export default router;

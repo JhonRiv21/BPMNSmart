@@ -28,7 +28,24 @@ export const getProcessByIdForUser = async (id: string, userId: string) => {
   });
 };
 
-// Delete process of the authenticated user by id
+// Create process of the authenticated user by id
+export const createProcessForUser = async (
+  userId: string,
+  data: {
+    name: string;
+  }
+) => {
+  return prisma.process.create({
+    data: {
+      name: data.name,
+      createdFor: userId,
+      bpmnXml: '',
+      screenShot: '',
+    },
+  });
+};
+
+// Update process of the authenticated user by id
 export const updateProcessForUser = async (
   id: string,
   userId: string,
@@ -55,12 +72,8 @@ export const updateProcessForUser = async (
   });
 };
 
-
 // Delete process of the authenticated user by id
-export const deleteProcessForUser = async (
-  id: string,
-  userId: string,
-) => {
+export const deleteProcessForUser = async (id: string, userId: string) => {
   const existing = prisma.process.findFirst({
     where: { id, createdFor: userId },
   });
@@ -68,6 +81,6 @@ export const deleteProcessForUser = async (
   if (!existing) return null;
 
   return prisma.process.delete({
-    where: { id }
+    where: { id },
   });
 };

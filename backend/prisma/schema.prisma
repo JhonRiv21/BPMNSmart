@@ -25,10 +25,10 @@ model User {
 model Process {
   id          String   @id @default(uuid())
   name        String
-  bpmnXml     String
+  bpmnXml     String @default("")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  screenShot  String?
+  screenShot  String @default("")
 
   createdFor  String
   user        User     @relation(fields: [createdFor], references: [id])
