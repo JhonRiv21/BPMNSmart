@@ -1,3 +1,4 @@
+import { PUBLIC_API_URL } from '$env/static/public';
 import { redirect, type Actions } from '@sveltejs/kit';
 import { z } from 'zod';
 
@@ -40,28 +41,68 @@ const createAccountSchema = z.object({
 });
 
 export const actions: Actions = {
-	login: async ({ request }) => {
+	login: async ({ request, cookies }) => {
 		const formData = Object.fromEntries(await request.formData());
 
 		const result = loginSchema.safeParse(formData);
 
 		if (!result.success) {
 			const { fieldErrors } = result.error.flatten();
-
+			const { passwordLogin, ...restData } = formData;
 			return {
 				action: 'login',
 				success: false,
-				data: formData,
+				data: restData,
 				errors: fieldErrors
 			};
 		}
 
-		console.log('✅ Datos válidos login:', result.data);
+		const { emailLogin, passwordLogin } = result.data;
 
-		// Guardar en DB, crear sesión, etc.
+		try {
+			const res = await fetch(`${PUBLIC_API_URL}/api/users/auth`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ email: emailLogin, password: passwordLogin })
+			});
 
-		throw redirect(303, '/home');
+			if (!res.ok) {
+				const error = await res.json();
+				const { passwordLogin, ...restData } = formData;
+				return {
+					action: 'login',
+					success: false,
+					data: restData,
+					errors: { passwordLogin: [error.message || 'Credenciales inválidas'] }
+				}	
+			}
+
+			const { token }: { token: string } = await res.json();
+
+			cookies.set('token', token, {
+				path: '/',
+				httpOnly: true,
+				sameSite: 'strict',
+				secure: process.env.NODE_ENV === 'production',
+				maxAge: 60 * 60 * 24
+			});
+		
+			throw redirect(303, '/home');
+		} catch (err) {
+			const { passwordLogin, ...restData } = formData;
+			return {
+				action: 'login',
+				success: false,
+				data: restData,
+				errors: { passwordLogin: ['Error en el servidor. Intenta más tarde.'] }
+			};
+		}
 	},
+
+
+
+
+
 	create: async ({ request }) => {
 		const formData = Object.fromEntries(await request.formData());
 
