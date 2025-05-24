@@ -21,10 +21,13 @@
 				>
 			{/if}
 			{#if page.url.pathname === '/home' || page.url.pathname.includes('/bpmn')}
-				<button
-					class="text-background bg-green hover:bg-green/80 cursor-pointer rounded-lg p-2.5 text-2xl transition duration-500"
+				<form method="POST" action="/logout">
+					<button
+						type="submit"
+						class="text-background bg-green hover:bg-green/80 cursor-pointer rounded-lg p-2.5 text-2xl transition duration-500"
 					><Logout /></button
-				>
+					>
+				</form>
 			{/if}
 		</nav>
 	</div>
