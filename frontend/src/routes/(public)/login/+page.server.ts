@@ -1,6 +1,7 @@
 import { PUBLIC_API_URL } from '$env/static/public';
 import { redirect, type Actions } from '@sveltejs/kit';
 import { z } from 'zod';
+import { dev } from '$app/environment';
 
 const loginSchema = z.object({
 	emailLogin: z
@@ -66,29 +67,39 @@ export const actions: Actions = {
 				body: JSON.stringify({ email: emailLogin, password: passwordLogin })
 			});
 
+			const data = await res.json();
+
 			if (!res.ok) {
-				const error = await res.json();
+				const { passwordLogin, ...restData } = formData;
+
+				return {
+					action: 'login',
+					success: false,
+					data: restData,
+					errors: { passwordLogin: [data.error || 'Credenciales inválidas'] }
+				};
+			}
+			console.log('LOGIN RESPONSE:', data);
+
+			if (!data?.token || !data?.user) {
 				const { passwordLogin, ...restData } = formData;
 				return {
 					action: 'login',
 					success: false,
 					data: restData,
-					errors: { passwordLogin: [error.message || 'Credenciales inválidas'] }
-				}	
+					errors: { passwordLogin: ['Error inesperado en el login'] }
+				};
 			}
 
-			const { token }: { token: string } = await res.json();
-
-			cookies.set('token', token, {
+			cookies.set('token', data.token, {
 				path: '/',
 				httpOnly: true,
 				sameSite: 'strict',
-				secure: process.env.NODE_ENV === 'production',
+				secure: !dev,
 				maxAge: 60 * 60 * 24
 			});
-		
-			throw redirect(303, '/home');
 		} catch (err) {
+			console.error('LOGIN ERROR:', err);
 			const { passwordLogin, ...restData } = formData;
 			return {
 				action: 'login',
@@ -97,6 +108,7 @@ export const actions: Actions = {
 				errors: { passwordLogin: ['Error en el servidor. Intenta más tarde.'] }
 			};
 		}
+		throw redirect(303, '/home');
 	},
 
 
