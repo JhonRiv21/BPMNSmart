@@ -6,10 +6,12 @@ declare global {
 	namespace App {
 		// interface Error {}
 		interface Locals {
-			user: {
-				id: string;
-				email: string;
-			} | undefined;
+			user:
+				| {
+						id: string;
+						email: string;
+				  }
+				| undefined;
 			token: string | undefined;
 		}
 		// interface PageData {}

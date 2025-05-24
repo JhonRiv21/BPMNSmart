@@ -111,10 +111,6 @@ export const actions: Actions = {
 		throw redirect(303, '/home');
 	},
 
-
-
-
-
 	create: async ({ request }) => {
 		const formData = Object.fromEntries(await request.formData());
 
