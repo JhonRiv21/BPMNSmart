@@ -40,7 +40,7 @@
 				<h5 class="text-3xl lg:text-4xl">Beneficios:</h5>
 
 				<ul class="space-y-4 md:space-y-6 lg:space-y-8">
-					{#each benefits as item}
+					{#each benefits as item, i (i)}
 						<li class="flex flex-row items-center gap-3 text-base md:text-lg">
 							<CheckIcon />
 							{item.text}

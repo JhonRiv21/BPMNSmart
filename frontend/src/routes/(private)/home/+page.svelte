@@ -83,7 +83,7 @@
 			</div>
 		{:else}
 			<div class="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4">
-				{#each filterData as item}
+				{#each filterData as item (item.id)}
 					<Cards
 						name={item.name}
 						lastUpdated={item.lastTime}

@@ -1,11 +1,13 @@
 <script lang="ts">
+	import type { Snippet } from 'svelte';
+
 	type Props = {
 		title: string;
 		text?: string;
 		onCancel: () => void;
 		onAction?: () => void;
 		textAction: string;
-		children?: any;
+		children?: Snippet<[]>;
 		colorAction?: string;
 	};
 
@@ -53,7 +55,9 @@
 							<div class="mb-4">
 								<p class="text-gray-500">{text}</p>
 							</div>
-							{@render children()}
+							{#if children}
+								{@render children()}
+							{/if}
 						</div>
 					</div>
 				</div>

@@ -29,7 +29,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 			};
 			event.locals.user = decoded;
 			event.locals.token = token;
-		} catch (err: unknown) {
+		} catch {
 			event.locals.user = undefined;
 			event.locals.token = undefined;
 		}

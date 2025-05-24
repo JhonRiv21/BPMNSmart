@@ -8,18 +8,14 @@
 		href?: string;
 	};
 
-	let cursorPointer = $state(false);
-
 	const managementRedirections = () => {
 		if (
 			page.url.pathname === '/' ||
 			page.url.pathname === '/login' ||
 			page.url.pathname === '/demo'
 		) {
-			cursorPointer = true;
 			goto('/');
 		}
-		cursorPointer = false;
 	};
 
 	const { hiddensm = true }: Props = $props();

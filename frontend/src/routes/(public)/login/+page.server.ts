@@ -50,6 +50,7 @@ export const actions: Actions = {
 		if (!result.success) {
 			const { fieldErrors } = result.error.flatten();
 			const { passwordLogin, ...restData } = formData;
+			void passwordLogin;
 			return {
 				action: 'login',
 				success: false,
@@ -71,7 +72,7 @@ export const actions: Actions = {
 
 			if (!res.ok) {
 				const { passwordLogin, ...restData } = formData;
-
+				void passwordLogin;
 				return {
 					action: 'login',
 					success: false,
@@ -83,6 +84,7 @@ export const actions: Actions = {
 
 			if (!data?.token || !data?.user) {
 				const { passwordLogin, ...restData } = formData;
+				void passwordLogin;
 				return {
 					action: 'login',
 					success: false,
@@ -101,6 +103,7 @@ export const actions: Actions = {
 		} catch (err) {
 			console.error('LOGIN ERROR:', err);
 			const { passwordLogin, ...restData } = formData;
+			void passwordLogin;
 			return {
 				action: 'login',
 				success: false,
