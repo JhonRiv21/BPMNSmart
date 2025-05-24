@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Snippet } from 'svelte';
+	import type { Snippet } from "svelte";
 
 	type Props = {
 		title: string;
@@ -9,6 +9,7 @@
 		textAction: string;
 		children?: Snippet<[]>;
 		colorAction?: string;
+		submitButton: boolean;
 	};
 
 	const {
@@ -18,7 +19,8 @@
 		onAction,
 		textAction,
 		children,
-		colorAction = 'blue'
+		colorAction = 'blue',
+		submitButton = false
 	}: Props = $props();
 </script>
 
@@ -62,12 +64,22 @@
 					</div>
 				</div>
 				<div class="mt-1 bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-					<button
-						onclick={onAction}
-						type="button"
-						class="inline-flex w-full justify-center rounded-md bg-{colorAction} font- px-5 py-2 text-white shadow-xs hover:bg-{colorAction}/80 cursor-pointer transition duration-500 sm:ml-3 sm:w-auto"
-						>{textAction}</button
-					>
+					{#if !submitButton}
+						<button
+							onclick={onAction}
+							type="button"
+							class="inline-flex w-full justify-center rounded-md bg-{colorAction} font- px-5 py-2 text-white shadow-xs hover:bg-{colorAction}/80 cursor-pointer transition duration-500 sm:ml-3 sm:w-auto"
+						>
+							{textAction}
+						</button>
+					{:else}
+						<button
+							type="submit"
+							class="inline-flex w-full justify-center rounded-md bg-{colorAction} font- px-5 py-2 text-white shadow-xs hover:bg-{colorAction}/80 cursor-pointer transition duration-500 sm:ml-3 sm:w-auto"
+						>
+							{textAction}
+						</button>
+					{/if}
 					<button
 						onclick={onCancel}
 						type="button"

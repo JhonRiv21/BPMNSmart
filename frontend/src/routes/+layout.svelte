@@ -17,7 +17,7 @@
 </script>
 
 <Header />
-<section class="mx-auto max-w-screen-2xl">
+<section class="mx-auto max-w-screen-2xl h-full">
 	{#if loading}
 		<SkeletonLoader />
 	{:else}
