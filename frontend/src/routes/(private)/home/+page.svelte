@@ -33,10 +33,10 @@
 </script>
 
 <section class="p-5 md:p-10">
-	<div class="flex flex-row items-center justify-between">
-		<h5 class="text-xl">Directorio</h5>
+	<div class="flex flex-col sm:flex-row items-center justify-between">
+		<h5 class="text-xl mr-auto">Directorio</h5>
 
-		<div class="flex flex-row items-center gap-5">
+		<div class="flex flex-wrap pt-5 sm:flex-row items-center gap-5">
 			<button
 				onclick={() => (openModalCreate = true)}
 				class="button-principal flex flex-row items-center gap-2"
@@ -82,7 +82,7 @@
 				<h4 class="text-4xl">No se encontraron diagramas para los datos filtrados</h4>
 			</div>
 		{:else}
-			<div class="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4">
+			<div class="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
 				{#each filterData as item (item.id)}
 					<Cards
 						name={item.name}

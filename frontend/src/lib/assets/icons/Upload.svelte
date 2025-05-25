@@ -1,4 +1,4 @@
-<svg width="1em" height="1em" viewBox="0 0 24 24">
+<svg width="30" height="30" viewBox="0 0 24 24">
 	<path
 		fill="none"
 		stroke="currentColor"

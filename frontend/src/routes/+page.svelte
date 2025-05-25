@@ -3,6 +3,7 @@
 	import { benefits } from '$lib/constants/benefits';
 	import CheckIcon from '$lib/assets/icons/CheckIcon.svelte';
 	import Footer from '$lib/components/Footer.svelte';
+	import GoogleButton from '$lib/components/GoogleButton.svelte';
 </script>
 
 <section>
@@ -96,8 +97,8 @@
 						>flexibilidad, facilidad de uso y control avanzado de versiones.</span
 					>
 				</p>
-				<div class="flex justify-center">
-					<a href="/login" class="button-principal px-12 py-3.5! sm:px-16!">Registrarse ahora</a>
+				<div class="flex justify-center max-w-xs mx-auto">
+					<GoogleButton />
 				</div>
 			</div>
 		</div>

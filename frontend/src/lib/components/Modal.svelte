@@ -9,7 +9,7 @@
 		textAction: string;
 		children?: Snippet<[]>;
 		colorAction?: string;
-		submitButton: boolean;
+		submitButton?: boolean;
 	};
 
 	const {
