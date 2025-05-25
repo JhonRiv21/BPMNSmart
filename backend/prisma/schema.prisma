@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,22 +8,20 @@ datasource db {
 }
 
 model User {
-  id       String    @id @default(uuid())
-  email    String    @unique
-  name     String
-  lastName String
-  password String?
+  id        String    @id @default(uuid())
+  email     String    @unique
+  name      String
+  lastNames String
   processes Process[]
 }
 
 model Process {
-  id          String   @id @default(uuid())
-  name        String
-  bpmnXml     String @default("")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  screenShot  String @default("")
-
-  createdFor  String
-  user        User     @relation(fields: [createdFor], references: [id])
+  id         String   @id @default(uuid())
+  name       String
+  bpmnXml    String   @default("")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  screenShot String   @default("")
+  createdFor String
+  user       User     @relation(fields: [createdFor], references: [id])
 }

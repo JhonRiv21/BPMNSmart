@@ -6,9 +6,9 @@ const prisma = new PrismaClient();
 export async function findOrCreateUserByGoogle(profile: {
   email: string;
   firstName: string;
-  lastName: string;
+  lastNames: string;
 }): Promise<User> {
-  const { email, firstName, lastName } = profile;
+  const { email, firstName, lastNames } = profile;
   
   let user = await prisma.user.findUnique({
     where: { email }
@@ -19,8 +19,7 @@ export async function findOrCreateUserByGoogle(profile: {
       data: {
         email,
         name: firstName,
-        lastName: lastName,
-        password: ''
+        lastNames,
       }
     });
   }

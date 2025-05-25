@@ -3,7 +3,7 @@ import session from 'express-session';
 import passport from './auth/passport.ts';
 import cors from 'cors';
 import userRoutes from './routes/user.route.ts';
-// import processRoutes from './routes/process.route.ts';
+import processRoutes from './routes/process.route.ts';
 import authRouter from './routes/auth.route.ts'
 import cookieParser from 'cookie-parser';
 
@@ -27,7 +27,7 @@ app.use(passport.session());
 
 app.use('/auth', authRouter);
 app.use('/api/users', userRoutes);
-// app.use('/api/process', processRoutes);
+app.use('/api/process', processRoutes);
 
 app.use((_req, res) => {
   res.status(404).json({ error: 'No encontrado' });

@@ -21,17 +21,17 @@ passport.use(
       clientSecret: process.env.OAUTH_SECRET_CLIENT!,
       callbackURL: '/auth/google/callback'
     },
-    async (accessToken: string, refreshToken: string, profile: Profile, done) => {
+    async (_accessToken: string, _refreshToken: string, profile: Profile, done) => {
       try {
         const email = profile.emails?.[0]?.value;
         const firstName = profile.name?.givenName || '';
-        const lastName = profile.name?.familyName || '';
+        const lastNames = profile.name?.familyName || '';
 
         if (!email) {
           return done(null, false, { message: 'No se obtuvo email de Google' });
         }
 
-        const user = await findOrCreateUserByGoogle({ email, firstName, lastName });
+        const user = await findOrCreateUserByGoogle({ email, firstName, lastNames });
         return done(null, user);
       } catch (err: any) {
         return done(err, undefined);

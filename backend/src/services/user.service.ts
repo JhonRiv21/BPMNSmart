@@ -8,7 +8,7 @@ export const getAllUsers = async () => {
       id: true,
       email: true,
       name: true,
-      lastName: true,
+      lastNames: true,
     },
   });
 };
