@@ -1,50 +1,16 @@
 import { PUBLIC_API_URL } from '$env/static/public';
 import { redirect, type Actions } from '@sveltejs/kit';
-import { z } from 'zod';
 import { dev } from '$app/environment';
+import type z from 'zod';
+import { loginSchema, createAccountSchema } from './schema';
 
-const loginSchema = z.object({
-	emailLogin: z
-		.string({ required_error: 'Campo requerido' })
-		.min(3, { message: 'Mínimo 3 caracteres' })
-		.max(50, { message: 'Máximo 50 caracteres' })
-		.regex(/[^@\s]+@[^@\s]+\.[^@\s]+/, { message: 'Email inválido' })
-		.trim(),
-	passwordLogin: z
-		.string({ required_error: 'Campo requerido' })
-		.min(3, { message: 'Mínimo 3 dígitos' })
-		.max(50, { message: 'Máximo 50 dígitos' })
-		.trim()
-});
-
-const createAccountSchema = z.object({
-	emailCreate: z
-		.string({ required_error: 'Campo requerido' })
-		.min(3, { message: 'Mínimo 3 caracteres' })
-		.max(50, { message: 'Máximo 50 caracteres' })
-		.regex(/[^@\s]+@[^@\s]+\.[^@\s]+/, { message: 'Email inválido' })
-		.trim(),
-	nameCreate: z
-		.string({ required_error: 'Campo requerido' })
-		.min(2, { message: 'Mínimo 2 caracteres' })
-		.max(50, { message: 'Máximo 50 caracteres' })
-		.trim(),
-	lastNameCreate: z
-		.string({ required_error: 'Campo requerido' })
-		.min(2, { message: 'Mínimo 2 caracteres' })
-		.max(50, { message: 'Máximo 50 caracteres' })
-		.trim(),
-	passwordCreate: z
-		.string({ required_error: 'Campo requerido' })
-		.min(5, { message: 'Mínimo 5 dígitos' })
-		.max(50, { message: 'Máximo 50 dígitos' })
-		.trim()
-});
+type FormErrors<T> = Partial<Record<keyof T, string[]>>;
+type LoginData = z.infer<typeof loginSchema>;
+type CreateAccountData = z.infer<typeof createAccountSchema>;
 
 export const actions: Actions = {
 	login: async ({ request, cookies }) => {
 		const formData = Object.fromEntries(await request.formData());
-
 		const result = loginSchema.safeParse(formData);
 
 		if (!result.success) {
@@ -55,14 +21,14 @@ export const actions: Actions = {
 				action: 'login',
 				success: false,
 				data: restData,
-				errors: fieldErrors
+				errors: fieldErrors as FormErrors<LoginData>
 			};
 		}
 
 		const { emailLogin, passwordLogin } = result.data;
 
 		try {
-			const res = await fetch(`${PUBLIC_API_URL}/api/users/auth`, {
+			const res = await fetch(`${PUBLIC_API_URL}/users/auth`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ email: emailLogin, password: passwordLogin })
@@ -71,25 +37,31 @@ export const actions: Actions = {
 			const data = await res.json();
 
 			if (!res.ok) {
+				const apiErrors: FormErrors<LoginData> = {
+            passwordLogin: [data.error || 'Credenciales inválidas']
+        };
 				const { passwordLogin, ...restData } = formData;
 				void passwordLogin;
 				return {
 					action: 'login',
 					success: false,
 					data: restData,
-					errors: { passwordLogin: [data.error || 'Credenciales inválidas'] }
+					errors: apiErrors
 				};
 			}
 			console.log('LOGIN RESPONSE:', data);
 
 			if (!data?.token || !data?.user) {
+				const unexpectedErrors: FormErrors<LoginData> = {
+            passwordLogin: ['Error inesperado en el login']
+        };
 				const { passwordLogin, ...restData } = formData;
 				void passwordLogin;
 				return {
 					action: 'login',
 					success: false,
 					data: restData,
-					errors: { passwordLogin: ['Error inesperado en el login'] }
+					errors: unexpectedErrors
 				};
 			}
 
@@ -103,20 +75,30 @@ export const actions: Actions = {
 		} catch (err) {
 			console.error('LOGIN ERROR:', err);
 			const { passwordLogin, ...restData } = formData;
+			const catchErrors: FormErrors<LoginData> = {
+        passwordLogin: ['Error en el servidor. Intenta más tarde.']
+      };
 			void passwordLogin;
 			return {
 				action: 'login',
 				success: false,
 				data: restData,
-				errors: { passwordLogin: ['Error en el servidor. Intenta más tarde.'] }
+				errors: catchErrors
 			};
 		}
 		throw redirect(303, '/home');
 	},
 
+
+
+
+
+
+
+
+
 	create: async ({ request }) => {
 		const formData = Object.fromEntries(await request.formData());
-
 		const result = createAccountSchema.safeParse(formData);
 
 		if (!result.success) {
@@ -126,13 +108,59 @@ export const actions: Actions = {
 				action: 'create',
 				success: false,
 				data: formData,
-				errors: fieldErrors
+				errors: fieldErrors as FormErrors<CreateAccountData>
 			};
 		}
 
-		console.log('✅ Datos válidos creación:', result.data);
+		const { 
+			emailCreate, 
+			nameCreate, 
+			lastNameCreate, 
+			passwordCreate, 
+		} = result.data;
 
-		// Guardar en DB, crear sesión, etc.
+		try {
+			const res = await fetch(`${PUBLIC_API_URL}/users/create`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					email: emailCreate,
+					name: nameCreate,
+					lastName: lastNameCreate,
+					password: passwordCreate
+				})
+			})
+
+			const data = await res.json();
+
+			 if (!res.ok) {
+        const apiErrors: FormErrors<CreateAccountData> = {};
+        const errorMessage = data.error || 'Error al crear cuenta.';
+        apiErrors.passwordCreate = [errorMessage];
+        apiErrors.confirmPasswordCreate = [errorMessage]; 
+				const { passwordCreate, confirmPasswordCreate, ...restData } = formData;
+				void confirmPasswordCreate
+        return {
+          action: 'create' as const,
+          success: false,
+          data: restData,
+          errors: apiErrors
+        };
+      }
+		} catch (err) {
+			console.error('CREATION ERROR:', err);
+			const catchErrors: FormErrors<CreateAccountData> = {
+        passwordCreate: ['Error en el servidor. Intenta más tarde.'],
+      };
+			const { passwordCreate, confirmPasswordCreate, ...restData } = formData;
+			void confirmPasswordCreate
+			return {
+        action: 'create' as const,
+        success: false,
+        data: restData,
+        errors: catchErrors
+      };
+		}
 
 		throw redirect(303, '/home');
 	}

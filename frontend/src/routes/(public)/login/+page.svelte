@@ -142,6 +142,21 @@
 						{/if}
 					</div>
 
+					<div class="space-y-2">
+						<label for="confirmPasswordCreate">Confirmar contraseña</label>
+						<input
+							type="password"
+							name="confirmPasswordCreate"
+							id="confirmPasswordCreate"
+							placeholder="Inserte"
+							value={form?.data?.confirmPasswordCreate ?? ''}
+							class="mt-1 w-full rounded-lg border border-gray-400 px-3 py-2"
+						/>
+						{#if form?.action === 'create' && form?.errors?.confirmPasswordCreate}
+							<p class="text-sm text-red-500">{form.errors.confirmPasswordCreate[0]}</p>
+						{/if}
+					</div>
+
 					<button
 						type="submit"
 						class="bg-green hover:bg-green/80 w-full cursor-pointer rounded-lg py-3 font-medium text-white transition duration-500"
