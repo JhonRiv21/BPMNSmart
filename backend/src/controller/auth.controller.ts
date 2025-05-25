@@ -19,7 +19,7 @@ export async function googleCallback(req: Request, res: Response, next: NextFunc
       path: '/',
     });
 
-    return res.redirect(`${process.env.FRONTEND_URL + '/home' || 'http://localhost:5173'}/home`);
+    return res.redirect(`${process.env.FRONTEND_UR || 'http://localhost:5173'}`);
   } catch (err) {
     console.error('Error en googleCallback:', err);
     return next(err);
