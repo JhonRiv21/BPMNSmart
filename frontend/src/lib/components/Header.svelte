@@ -4,6 +4,7 @@
 	import Home from '$lib/assets/icons/Home.svelte';
 	import Logout from '$lib/assets/icons/Logout.svelte';
 	import Modal from './Modal.svelte';
+	import GoogleButton from './GoogleButton.svelte';
 
 	let openModalLogout = $state(false);
 </script>
@@ -13,7 +14,7 @@
 		<Logo />
 		<nav class="flex w-full max-w-max flex-row gap-4">
 			{#if page.url.pathname.includes('demo') || page.url.pathname === '/'}
-				<a href="/login" class="button-principal">Ingresar</a>
+				<GoogleButton />
 			{/if}
 
 			{#if page.url.pathname.includes('/bpmn')}
