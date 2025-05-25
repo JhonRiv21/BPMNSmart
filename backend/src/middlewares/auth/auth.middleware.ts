@@ -1,8 +1,14 @@
+// src/middlewares/auth/auth.middleware.ts
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 
-interface AuthenticatedRequest extends Request {
-  user?: any;
+export interface UserPayload {
+  id: string;
+  email: string;
+}
+
+export interface AuthenticatedRequest extends Request {
+  user?: UserPayload;
 }
 
 export function verifyToken(req: AuthenticatedRequest, res: Response, next: NextFunction) {
@@ -20,10 +26,13 @@ export function verifyToken(req: AuthenticatedRequest, res: Response, next: Next
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as UserPayload;
     req.user = decoded;
     next();
-  } catch (err) {
-    return res.status(403).json({ error: 'Token inválido o expirado.' });
+  } catch (err: any) {
+    if (err.name === 'TokenExpiredError') {
+        return res.status(401).json({ error: 'Token expirado.' });
+    }
+    return res.status(403).json({ error: 'Token inválido.' });
   }
 }

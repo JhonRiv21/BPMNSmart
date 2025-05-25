@@ -1,136 +1,136 @@
-// import { Response } from 'express';
-// import { AuthenticatedRequest } from '../middlewares/auth/auth.middleware.ts';
-// import * as processService from '../services/process.service.ts';
+import { Response } from 'express';
+import { AuthenticatedRequest } from '../middlewares/auth/auth.middleware.ts';
+import * as processService from '../services/process.service.ts';
 
-// // Get user process
-// export const getMyProcess = async (
-//   req: AuthenticatedRequest,
-//   res: Response
-// ) => {
-//   try {
-//     const userId = req.user?.id;
-//     if (!userId)
-//       return res.status(401).json({ error: 'Usuario no autenticado' });
+// Get user process
+export const getMyProcess = async (
+  req: AuthenticatedRequest,
+  res: Response
+) => {
+  try {
+    const userId = req.user?.id;
+    if (!userId)
+      return res.status(401).json({ error: 'Usuario no autenticado' });
 
-//     const processes = await processService.getUserProcesses(userId);
-//     res.json(processes);
-//   } catch (err) {
-//     res.status(500).json({ error: 'Error al obtener procesos' });
-//   }
-// };
+    const processes = await processService.getUserProcesses(userId);
+    res.json(processes);
+  } catch (err) {
+    res.status(500).json({ error: 'Error al obtener procesos' });
+  }
+};
 
-// // Get user process by id
-// export const getProcessById = async (
-//   req: AuthenticatedRequest,
-//   res: Response
-// ) => {
-//   try {
-//     const userId = req.user?.id;
-//     const { id } = req.params;
+// Get user process by id
+export const getProcessById = async (
+  req: AuthenticatedRequest,
+  res: Response
+) => {
+  try {
+    const userId = req.user?.id;
+    const { id } = req.params;
 
-//     if (!userId)
-//       return res.status(401).json({ error: 'Usuario no autenticado' });
+    if (!userId)
+      return res.status(401).json({ error: 'Usuario no autenticado' });
 
-//     const processes = await processService.getProcessByIdForUser(id, userId);
-//     if (!process)
-//       return res.status(404).json({ error: 'Proceso no encontrado' });
-//     res.json(processes);
-//   } catch (err) {
-//     res.status(500).json({ error: 'Error al obtener el proceso' });
-//   }
-// };
+    const processes = await processService.getProcessByIdForUser(id, userId);
+    if (!process)
+      return res.status(404).json({ error: 'Proceso no encontrado' });
+    res.json(processes);
+  } catch (err) {
+    res.status(500).json({ error: 'Error al obtener el proceso' });
+  }
+};
 
-// // Create user process
-// export const createProcess = async (
-//   req: AuthenticatedRequest,
-//   res: Response
-// ) => {
-//   const { name } = req.body;
-//   const userId = req.user?.id;
+// Create user process
+export const createProcess = async (
+  req: AuthenticatedRequest,
+  res: Response
+) => {
+  const { name } = req.body;
+  const userId = req.user?.id;
 
-//   if (!userId) return res.status(401).json({ error: 'Usuario no autenticado' });
+  if (!userId) return res.status(401).json({ error: 'Usuario no autenticado' });
 
-//   if (!name) {
-//     return res
-//       .status(400)
-//       .json({ error: 'Se requiere un nombre para el diagrama' });
-//   }
+  if (!name) {
+    return res
+      .status(400)
+      .json({ error: 'Se requiere un nombre para el diagrama' });
+  }
 
-//   try {
-//     const created = await processService.createProcessForUser(userId, {
-//       name,
-//     });
-//     res.status(201).json({
-//       message: 'Proceso creado correctamente',
-//       data: created,
-//     });
-//   } catch (e) {
-//     res.status(500).json({ error: 'Error al crear el proceso' });
-//   }
-// };
+  try {
+    const created = await processService.createProcessForUser(userId, {
+      name,
+    });
+    res.status(201).json({
+      message: 'Proceso creado correctamente',
+      data: created,
+    });
+  } catch (e) {
+    res.status(500).json({ error: 'Error al crear el proceso' });
+  }
+};
 
-// // Update user process by id
-// export const updateProcess = async (
-//   req: AuthenticatedRequest,
-//   res: Response
-// ) => {
-//   const { id } = req.params;
-//   const { name, bpmnXml, screenShot } = req.body;
-//   const userId = req.user?.id;
+// Update user process by id
+export const updateProcess = async (
+  req: AuthenticatedRequest,
+  res: Response
+) => {
+  const { id } = req.params;
+  const { name, bpmnXml, screenShot } = req.body;
+  const userId = req.user?.id;
 
-//   if (!userId) return res.status(401).json({ error: 'Usuario no autenticado' });
+  if (!userId) return res.status(401).json({ error: 'Usuario no autenticado' });
 
-//   if (name === undefined && bpmnXml === undefined && screenShot === undefined) {
-//     return res.status(400).json({ error: 'No hay campos para actualizar' });
-//   }
+  if (name === undefined && bpmnXml === undefined && screenShot === undefined) {
+    return res.status(400).json({ error: 'No hay campos para actualizar' });
+  }
 
-//   try {
-//     const updated = await processService.updateProcessForUser(id, userId, {
-//       name,
-//       bpmnXml,
-//       screenShot,
-//     });
+  try {
+    const updated = await processService.updateProcessForUser(id, userId, {
+      name,
+      bpmnXml,
+      screenShot,
+    });
 
-//     if (!updated)
-//       return res
-//         .status(404)
-//         .json({ error: 'Proceso no encontrado o no autorizado' });
+    if (!updated)
+      return res
+        .status(404)
+        .json({ error: 'Proceso no encontrado o no autorizado' });
 
-//     res.status(201).json({
-//       message: 'Proceso actualizado correctamente',
-//       data: updated,
-//     });
-//   } catch (e) {
-//     res.status(500).json({ error: 'Error al actualizar el proceso' });
-//   }
-// };
+    res.status(201).json({
+      message: 'Proceso actualizado correctamente',
+      data: updated,
+    });
+  } catch (e) {
+    res.status(500).json({ error: 'Error al actualizar el proceso' });
+  }
+};
 
-// // Delete user process by id
-// export const deleteProcess = async (
-//   req: AuthenticatedRequest,
-//   res: Response
-// ) => {
-//   const { id } = req.params;
-//   const userId = req.user?.id;
+// Delete user process by id
+export const deleteProcess = async (
+  req: AuthenticatedRequest,
+  res: Response
+) => {
+  const { id } = req.params;
+  const userId = req.user?.id;
 
-//   if (!userId) return res.status(401).json({ error: 'Usuario no autenticado' });
+  if (!userId) return res.status(401).json({ error: 'Usuario no autenticado' });
 
-//   if (!id) {
-//     return res
-//       .status(400)
-//       .json({ error: 'No hay identificador para eliminar' });
-//   }
+  if (!id) {
+    return res
+      .status(400)
+      .json({ error: 'No hay identificador para eliminar' });
+  }
 
-//   try {
-//     const deleted = await processService.deleteProcessForUser(id, userId);
+  try {
+    const deleted = await processService.deleteProcessForUser(id, userId);
 
-//     if (!deleted)
-//       return res
-//         .status(404)
-//         .json({ error: 'Proceso no encontrado o no autorizado' });
+    if (!deleted)
+      return res
+        .status(404)
+        .json({ error: 'Proceso no encontrado o no autorizado' });
 
-//     res.status(204).send();
-//   } catch (e) {
-//     res.status(500).json({ error: 'Error al eliminar el proceso' });
-//   }
-// };
+    res.status(204).send();
+  } catch (e) {
+    res.status(500).json({ error: 'Error al eliminar el proceso' });
+  }
+};
