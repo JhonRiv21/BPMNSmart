@@ -18,7 +18,7 @@ model User {
   email    String    @unique
   name     String
   lastName String
-  password String
+  password String?
   processes Process[]
 }
 

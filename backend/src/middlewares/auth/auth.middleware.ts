@@ -1,3 +1,4 @@
+// src/middlewares/auth.middleware.ts
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
@@ -5,19 +6,24 @@ export interface AuthenticatedRequest extends Request {
   user?: { id: string; email: string };
 }
 
-// Verify valid token
 export const verifyToken = (
   req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
 ) => {
-  const authHeader = req.headers.authorization;
+  const tokenFromCookie = req.cookies?.token as string | undefined;
 
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  const authHeader = req.headers.authorization;
+  const tokenFromHeader =
+    authHeader && authHeader.startsWith('Bearer ')
+      ? authHeader.slice(7)
+      : undefined;
+
+  const token = tokenFromCookie ?? tokenFromHeader;
+
+  if (!token) {
     return res.status(401).json({ error: 'Token no proporcionado' });
   }
-
-  const token = authHeader.split(' ')[1];
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {

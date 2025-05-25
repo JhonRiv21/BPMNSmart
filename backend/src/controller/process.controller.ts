@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { AuthenticatedRequest } from '../middlewares/auth/auth.middleware';
+import { AuthenticatedRequest } from '../middlewares/auth/auth.middleware.ts';
 import * as processService from '../services/process.service.ts';
 
 // Get user process

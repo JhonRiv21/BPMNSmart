@@ -9,7 +9,5 @@ router.get(
   verifyToken as RequestHandler,
   userController.getAllUsers as RequestHandler
 );
-router.post('/create', userController.createUser as RequestHandler);
-router.post('/auth', userController.loginUser as RequestHandler);
 
 export default router;
