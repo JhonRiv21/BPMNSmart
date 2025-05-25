@@ -6,19 +6,20 @@ export async function googleCallback(req: Request, res: Response, next: NextFunc
   try {
     const user = req.user as User;
     if (!user) {
-      return res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5173'}/login`);
+      return res.redirect(`${process.env.FRONTEND_URL + '/login' || 'http://localhost:5173'}/login`);
     }
 
     const token = generateJwtToken(user);
     
-    res.cookie('token', token, {
+   res.cookie('token', token, {
       httpOnly: true,
-      sameSite: 'strict',
+      sameSite: 'lax',
       secure: process.env.NODE_ENV === 'production',
-      maxAge: 1000 * 60 * 60 * 2
+      maxAge: 1000 * 60 * 60 * 2,
+      path: '/',
     });
 
-    return res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5173'}/home`);
+    return res.redirect(`${process.env.FRONTEND_URL + '/home' || 'http://localhost:5173'}/home`);
   } catch (err) {
     console.error('Error en googleCallback:', err);
     return next(err);
@@ -27,5 +28,5 @@ export async function googleCallback(req: Request, res: Response, next: NextFunc
 
 export function logout(_req: Request, res: Response) {
   res.clearCookie('token', { path: '/' });
-  res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5173'}/login`);
+  res.redirect(`${process.env.FRONTEND_URL + '/login' || 'http://localhost:5173'}/login`);
 }

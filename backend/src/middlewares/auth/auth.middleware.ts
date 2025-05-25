@@ -1,38 +1,29 @@
-// src/middlewares/auth.middleware.ts
-import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import { Request, Response, NextFunction } from 'express';
 
-export interface AuthenticatedRequest extends Request {
-  user?: { id: string; email: string };
+interface AuthenticatedRequest extends Request {
+  user?: any;
 }
 
-export const verifyToken = (
-  req: AuthenticatedRequest,
-  res: Response,
-  next: NextFunction
-) => {
-  const tokenFromCookie = req.cookies?.token as string | undefined;
-
-  const authHeader = req.headers.authorization;
-  const tokenFromHeader =
-    authHeader && authHeader.startsWith('Bearer ')
-      ? authHeader.slice(7)
-      : undefined;
-
-  const token = tokenFromCookie ?? tokenFromHeader;
+export function verifyToken(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+  let token: string | undefined = req.cookies.token;
 
   if (!token) {
-    return res.status(401).json({ error: 'Token no proporcionado' });
+    const authHeader = req.headers.authorization;
+    if (authHeader?.startsWith('Bearer ')) {
+      token = authHeader.split(' ')[1];
+    }
+  }
+
+  if (!token) {
+    return res.status(401).json({ error: 'Acceso denegado: No se proporcionó token.' });
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
-      id: string;
-      email: string;
-    };
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!);
     req.user = decoded;
     next();
   } catch (err) {
-    return res.status(401).json({ error: 'Token inválido o expirado' });
+    return res.status(403).json({ error: 'Token inválido o expirado.' });
   }
-};
+}
