@@ -3,7 +3,8 @@
 	import Header from '$lib/components/Header.svelte';
 	import { beforeNavigate, afterNavigate } from '$app/navigation';
 	import SkeletonLoader from '$lib/components/SkeletonLoader.svelte';
-
+	import Toast from '$lib/components/Toast.svelte'
+	
 	let loading = $state(false);
 	let { children } = $props();
 
@@ -24,3 +25,4 @@
 		{@render children()}
 	{/if}
 </section>
+<Toast />

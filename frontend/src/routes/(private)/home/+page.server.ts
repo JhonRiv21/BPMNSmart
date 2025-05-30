@@ -113,7 +113,6 @@ export const actions: Actions = {
       if (!res.ok) {
         throw new Error('Error al eliminar proceso');
       }
-
       return { success: true };
     } catch (err) {
       console.error('Failed to delete process', err);

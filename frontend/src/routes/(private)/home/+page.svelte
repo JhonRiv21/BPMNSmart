@@ -6,7 +6,7 @@
 	import Cards from '$lib/components/Cards.svelte';
 	import Modal from '$lib/components/Modal.svelte';
 	import { normalize } from '$lib/utils/utils';
-
+	import { toast } from 'store/toast';
 	const { data, form } = $props();
 
 	let processes = $state(data.processes)
@@ -31,6 +31,7 @@
 	$effect(() => {
 		handleFilter(searchDiagram);
 	});
+
 </script>
 
 <section class="p-5 md:p-10">
