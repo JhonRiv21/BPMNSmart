@@ -2,6 +2,7 @@
 	import Trash from '$lib/assets/icons/Trash.svelte';
 	import Pencil from '$lib/assets/icons/Pencil.svelte';
 	import { goto } from '$app/navigation';
+	import { timeSince } from '$lib/utils/utils';
 
 	type Props = {
 		name: string;
@@ -36,8 +37,8 @@
 			><Pencil /></button
 		>
 	</div>
-	<div class="bg-blue rounded-b-lg p-3">
-		<p class="text-background font-semibold">{name}</p>
-		<p class="text-background">{lastUpdated}</p>
+	<div class="bg-blue h-full} rounded-b-lg p-3">
+		<p class="text-background font-semibold truncate max-w-[98%]">{name}</p>
+		<p class="text-background text-xs pt-1 truncate max-w-[98%]">Última modificación: {timeSince(lastUpdated) || 'Desconocido'}</p>
 	</div>
 </div>

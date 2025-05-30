@@ -6,7 +6,7 @@ export async function googleCallback(req: Request, res: Response, next: NextFunc
   try {
     const user = req.user as User;
     if (!user) {
-      return res.redirect(`${process.env.FRONTEND_URL + '/login' || 'http://localhost:5173'}/login`);
+      return res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5173'}`);
     }
 
     const token = generateJwtToken(user);
@@ -28,5 +28,5 @@ export async function googleCallback(req: Request, res: Response, next: NextFunc
 
 export function logout(_req: Request, res: Response) {
   res.clearCookie('token', { path: '/' });
-  res.redirect(`${process.env.FRONTEND_URL + '/login' || 'http://localhost:5173'}/login`);
+  res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5173'}`);
 }

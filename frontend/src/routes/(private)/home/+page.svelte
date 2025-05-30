@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
 	import Plus from '$lib/assets/icons/Plus.svelte';
 	import Search from '$lib/assets/icons/Search.svelte';
 	import Upload from '$lib/assets/icons/Upload.svelte';
@@ -6,29 +7,22 @@
 	import Modal from '$lib/components/Modal.svelte';
 	import { normalize } from '$lib/utils/utils';
 
-	const dummy = [
-		{
-			id: '1',
-			name: 'Nombre diagrama 1',
-			lastTime: 'Úiltima edición: hace 20 minutos'
-		},
-		{
-			id: '2',
-			name: 'Nombre diagrama 2',
-			lastTime: 'Úiltima edición: hace 20 minutos'
-		}
-	];
+	const { data, form } = $props();
 
+	const processes = $state(data.processes)
+	
 	let openModalCreate = $state(false);
 	let openModalImport = $state(false);
 	let openModalDelete = $state(false);
 
-	let filterData = $state(dummy);
+	let idReferenced = $state<string | null>(null);
+
+	let filterData = $state(processes);
 	let searchDiagram = $state('');
 
 	const handleFilter = (searchItem: string) => {
 		const search = normalize(searchItem);
-		filterData = dummy.filter((item) => normalize(item.name).includes(search));
+		filterData = processes.filter((item: { name: string; }) => normalize(item.name).includes(search));
 	};
 </script>
 
@@ -36,7 +30,7 @@
 	<div class="flex flex-col sm:flex-row items-center justify-between">
 		<h5 class="text-xl mr-auto">Directorio</h5>
 
-		<div class="flex flex-wrap pt-5 sm:flex-row items-center gap-5">
+		<div class="flex flex-wrap pt-5 sm:pt-0 sm:flex-row items-center gap-5">
 			<button
 				onclick={() => (openModalCreate = true)}
 				class="button-principal flex flex-row items-center gap-2"
@@ -53,7 +47,7 @@
 	</div>
 
 	<section class="mt-10">
-		{#if dummy.length > 0}
+		{#if processes.length > 0}
 			<div class="relative mb-6 w-full">
 				<Search
 					className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none"
@@ -67,7 +61,7 @@
 			</div>
 		{/if}
 
-		{#if dummy.length === 0}
+		{#if processes.length === 0}
 			<div class="mx-auto mt-30 w-full max-w-xl space-y-6">
 				<h4 class="text-4xl">¡Bienvenido a BPMNSmart!</h4>
 				<br />
@@ -82,13 +76,16 @@
 				<h4 class="text-4xl">No se encontraron diagramas para los datos filtrados</h4>
 			</div>
 		{:else}
-			<div class="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+			<div class="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
 				{#each filterData as item (item.id)}
 					<Cards
 						name={item.name}
-						lastUpdated={item.lastTime}
+						lastUpdated={item.updatedAt}
 						redirection={`/bpmn/${item.id}`}
-						trashAction={() => (openModalDelete = true)}
+						trashAction={() => {
+							idReferenced = item.id;
+							openModalDelete = true;
+						}}
 					/>
 				{/each}
 			</div>
@@ -97,26 +94,31 @@
 </section>
 
 {#if openModalCreate}
-	<Modal
-		title="Creación de diagrama"
-		text="Ingrese el nombre de su diagrama"
-		textAction="Crear diagrama"
-		onCancel={() => (openModalCreate = false)}
-		onAction={() => (openModalCreate = false)}
-	>
-		<form>
+	<form method="POST" action="?/create" use:enhance>
+		<Modal
+			title="Creación de diagrama"
+			text="Ingrese el nombre de su diagrama (Max. 30 dígitos)"
+			textAction="Crear diagrama"
+			onCancel={() => (openModalCreate = false)}
+			submitButton={true}
+		>
 			<div class="space-y-2">
 				<label for="nameDiagram">Nombre</label>
 				<input
 					type="text"
+					value={form?.values?.nameCreate ?? ''}
 					name="nameDiagram"
 					id="nameDiagram"
 					placeholder="Inserte"
+					maxlength="30"
 					class="mt-1 w-full rounded-lg border border-gray-400 px-3 py-2"
 				/>
+				{#if form?.errors?.nameCreate}
+					<p class="text-sm text-red-500 mt-1">{form.errors.nameCreate}</p>
+				{/if}
 			</div>
-		</form>
-	</Modal>
+		</Modal>
+	</form>
 {/if}
 
 {#if openModalImport}
@@ -128,7 +130,7 @@
 		onAction={() => (openModalImport = false)}
 	>
 		<form class="w-full">
-			<div class="space-y-2">
+			<div class="w-full space-y-2">
 				<label for="nameDiagramImported">Nombre</label>
 				<input
 					type="text"
@@ -149,15 +151,19 @@
 	</Modal>
 {/if}
 
-{#if openModalDelete}
-	<Modal
-		title="¿Desea eliminar el diagrama?"
-		text="Esta acción es irreversible"
-		textAction="Eliminar diagrama"
-		colorAction="green"
-		onCancel={() => (openModalDelete = false)}
-		onAction={() => (openModalDelete = false)}
-	>
-		<div></div>
-	</Modal>
+{#if openModalDelete && idReferenced}
+	<form method="POST" action="?/delete" use:enhance>
+		<input type="hidden" id="idDelete" name="idDelete" value={idReferenced} />
+		<Modal
+			title="¿Desea eliminar el diagrama?"
+			text="Esta acción es irreversible"
+			textAction="Eliminar diagrama"
+			colorAction="green"
+			onCancel={() => {
+        openModalDelete = false;
+        idReferenced = null;
+      }}
+			submitButton={true}
+		/>
+	</form>
 {/if}

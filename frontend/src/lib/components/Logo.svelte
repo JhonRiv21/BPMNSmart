@@ -11,7 +11,6 @@
 	const managementRedirections = () => {
 		if (
 			page.url.pathname === '/' ||
-			page.url.pathname === '/login' ||
 			page.url.pathname === '/demo'
 		) {
 			goto('/');
@@ -24,7 +23,6 @@
 <button
 	onclick={managementRedirections}
 	class="flex flex-row items-center gap-3 {page.url.pathname === '/' ||
-	page.url.pathname === '/login' ||
 	page.url.pathname === '/demo'
 		? 'cursor-pointer'
 		: ''}"
