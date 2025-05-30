@@ -9,7 +9,7 @@
 
 	const { data, form } = $props();
 
-	const processes = $state(data.processes)
+	let processes = $state(data.processes)
 	
 	let openModalCreate = $state(false);
 	let openModalImport = $state(false);
@@ -17,13 +17,20 @@
 
 	let idReferenced = $state<string | null>(null);
 
-	let filterData = $state(processes);
+	let filterData = $state([...processes]);
 	let searchDiagram = $state('');
 
 	const handleFilter = (searchItem: string) => {
 		const search = normalize(searchItem);
+		if (!search) {
+      filterData = [...processes];
+    }
 		filterData = processes.filter((item: { name: string; }) => normalize(item.name).includes(search));
 	};
+
+	$effect(() => {
+		handleFilter(searchDiagram);
+	});
 </script>
 
 <section class="p-5 md:p-10">
@@ -152,7 +159,24 @@
 {/if}
 
 {#if openModalDelete && idReferenced}
-	<form method="POST" action="?/delete" use:enhance>
+	<form 
+		method="POST"
+		action="?/delete" 
+		use:enhance={() => {
+			const currentIdDelete = idReferenced;
+			
+			return async ({ result }) => {
+				if (result.type === 'success' && result.data?.success) {
+					processes = processes.filter((p: { id: string | null; }) => p.id !== currentIdDelete);
+					openModalDelete = false;
+          idReferenced = null;
+				} else if (result.type === 'failure' || (result.type === 'success' && result.data?.error)) {
+					openModalDelete = false;
+          idReferenced = null;
+				}
+			}
+		}}
+	>
 		<input type="hidden" id="idDelete" name="idDelete" value={idReferenced} />
 		<Modal
 			title="¿Desea eliminar el diagrama?"
