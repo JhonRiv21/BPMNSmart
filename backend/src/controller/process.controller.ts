@@ -1,6 +1,7 @@
 import { Response } from 'express';
 import { AuthenticatedRequest } from '../middlewares/auth/auth.middleware.ts';
 import * as processService from '../services/process.service.ts';
+import { DuplicateProcessNameError } from '../errors/DuplicateProcessNameError.ts';
 
 // Get user process
 export const getMyProcess = async (
@@ -65,6 +66,9 @@ export const createProcess = async (
       data: created,
     });
   } catch (e) {
+    if (e instanceof DuplicateProcessNameError) {
+      return res.status(400).json({ error: 'Ya tienes un proceso con ese nombre.' });
+    }
     res.status(500).json({ error: 'Error al crear el proceso' });
   }
 };

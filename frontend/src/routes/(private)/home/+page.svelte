@@ -32,6 +32,11 @@
 		handleFilter(searchDiagram);
 	});
 
+	$effect(() => {
+    if (form?.error) {
+      toast.error(form.error);
+    }
+  });
 </script>
 
 <section class="p-5 md:p-10">
@@ -102,7 +107,11 @@
 </section>
 
 {#if openModalCreate}
-	<form method="POST" action="?/create" use:enhance>
+	<form 
+		method="POST" 
+		action="?/create" 
+		use:enhance
+	>
 		<Modal
 			title="Creación de diagrama"
 			text="Ingrese el nombre de su diagrama (Max. 30 dígitos)"
@@ -171,9 +180,11 @@
 					processes = processes.filter((p: { id: string | null; }) => p.id !== currentIdDelete);
 					openModalDelete = false;
           idReferenced = null;
+					toast.success(result.data?.message)
 				} else if (result.type === 'failure' || (result.type === 'success' && result.data?.error)) {
 					openModalDelete = false;
           idReferenced = null;
+					toast.error(result.data?.error)
 				}
 			}
 		}}

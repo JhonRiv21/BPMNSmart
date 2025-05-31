@@ -41,7 +41,7 @@
 	<div class="fixed top-6 inset-x-0 z-50 flex justify-center pointer-events-none">
 		<div
 			transition:slide
-			class={`relative pointer-events-auto w-[95%] sm:w-[300px] rounded-xs shadow-xl text-white ${toastBgClass}`}
+			class={`relative pointer-events-auto w-[95%] sm:w-[350px] rounded-xs shadow-xl text-white ${toastBgClass}`}
 			style="font-family: 'Inter', sans-serif;"
 		>
 			<button

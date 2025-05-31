@@ -1,4 +1,4 @@
-<div class="mx-auto mt-40 w-full max-w-sm rounded-md border border-gray-200 p-8 shadow-xl">
+<div class="mx-auto mt-40 z-50 w-full max-w-sm rounded-md border border-gray-200 p-8 shadow-xl">
 	<div class="flex animate-pulse space-x-4">
 		<div class="size-14 rounded-full bg-zinc-400"></div>
 		<div class="flex-1 space-y-6 py-1">

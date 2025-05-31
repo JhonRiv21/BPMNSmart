@@ -21,7 +21,7 @@
 	onkeydown={(e) => {
 		if (e.key === 'Enter') window.location.href = redirection;
 	}}
-	class="cursor-pointer rounded-lg border"
+	class="cursor-pointer rounded-lg border border-gray-500 shadow-lg"
 >
 	<div class="relative h-32 rounded-t-lg bg-gray-200">
 		<button

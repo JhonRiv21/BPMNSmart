@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { DuplicateProcessNameError } from '../errors/DuplicateProcessNameError.ts';
 const prisma = new PrismaClient();
 
 // Get all processes of the authenticated user
@@ -35,6 +36,18 @@ export const createProcessForUser = async (
     name: string;
   }
 ) => {
+
+  const existing = await prisma.process.findFirst({
+    where: {
+      createdFor: userId,
+      name: data.name
+    }
+  })
+  
+  if (existing) {
+    throw new DuplicateProcessNameError();
+  }
+
   return prisma.process.create({
     data: {
       name: data.name,

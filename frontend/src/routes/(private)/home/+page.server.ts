@@ -44,17 +44,19 @@ export const actions: Actions = {
     const formData = await request.formData();
     const name = formData.get('nameDiagram')?.toString();
 
-    const result = nameDiagram.safeParse({ nameCreate: name });
-
-    console.log('Create action formData:', Object.fromEntries(formData));
+    const validationResult = nameDiagram.safeParse({ nameCreate: name });
+    const validatedName = validationResult.data?.nameCreate;
+    
     if (!token) {
-      return { success: false, error: 'Token no proporcionado' };
+      return fail(401, {
+        error: 'Token no proporcionado o inválido.',
+        values: { nameCreate: validatedName }
+      });
     }
 
-    if (!result.success) {
-      const errors = result.error.flatten().fieldErrors;
+    if (!validationResult.success) {
+      const errors = validationResult.error.flatten().fieldErrors;
       return fail(400, {
-        success: false,
         errors,
         values: { nameCreate: name }
       });
@@ -70,20 +72,37 @@ export const actions: Actions = {
           Authorization: `Bearer ${token}` 
         },
         body: JSON.stringify({
-          name: result.data.nameCreate,
+          name: validatedName,
           bpmnXml: '',
           screenShot: ''
         })
       })
 
       if (!res.ok) {
-        throw new Error('Error al crear proceso');
+        let errorToReturnToClient = 'Error al crear el diagrama, intente más tarde.';
+        try {
+          const errorBody = await res.json();
+          if (errorBody?.error === "Ya tienes un proceso con ese nombre.") {
+            errorToReturnToClient = errorBody.error;
+          }
+        } catch (e) {
+          console.error('No se pudo leer el error JSON de la API o la respuesta no era JSON:', e);
+        }
+
+        return fail(res.status, {
+          error: errorToReturnToClient,
+          values: { nameCreate: validatedName }
+        });
       }
+
       console.log('res', res)
       created = await res.json();
     } catch (err) {
-      console.error('Failed to create process', err);
-      return { success: false, error: 'Error en el servidor' };
+      console.error('Excepción de red o fetch al intentar crear el proceso:', err);
+      return fail(500, {
+        error: 'No se pudo conectar con el servidor para crear el diagrama. Verifique su conexión e intente más tarde.',
+        values: { nameCreate: validatedName }
+      });
     }
     
     throw redirect(303, `/bpmn/${created.data.id}`);
@@ -113,10 +132,10 @@ export const actions: Actions = {
       if (!res.ok) {
         throw new Error('Error al eliminar proceso');
       }
-      return { success: true };
+      return { success: true, message: 'Diagrama eliminado con éxito' };
     } catch (err) {
       console.error('Failed to delete process', err);
-      return { success: false, error: 'Error en el servidor' };
+      return { success: false, error: 'No se pudo eliminar diagrama, intente más tarde' };
     }
   }
 };
