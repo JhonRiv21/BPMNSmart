@@ -61,7 +61,7 @@ function createToast() {
 			clearInterval(progressTimer);
 			set({ ...initial, open: false });
 		}
-  };
+	};
 }
 
 export const toast = createToast();

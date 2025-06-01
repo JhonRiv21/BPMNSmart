@@ -12,8 +12,8 @@ export function timeSince(dateISO: string) {
 }
 
 export function getToken(): string | undefined {
-  return document.cookie
-    .split('; ')
-    .find(row => row.startsWith('token='))
-    ?.split('=')[1];
+	return document.cookie
+		.split('; ')
+		.find((row) => row.startsWith('token='))
+		?.split('=')[1];
 }

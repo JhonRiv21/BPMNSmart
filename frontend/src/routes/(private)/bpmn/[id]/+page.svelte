@@ -2,10 +2,10 @@
 	import { onMount } from 'svelte';
 	import BpmnModeler from 'bpmn-js/lib/Modeler';
 	import type CommandStack from 'diagram-js/lib/command/CommandStack';
-	import Save from '$lib/assets/icons/Save.svelte'
-	import { getDiagramById, updatedDiagram } from '$lib/services/Diagram'
-	import { page } from '$app/state'
-	import { toast } from "store/toast";
+	import Save from '$lib/assets/icons/Save.svelte';
+	import { getDiagramById, updatedDiagram } from '$lib/services/Diagram';
+	import { page } from '$app/state';
+	import { toast } from 'store/toast';
 	import defaultDiagram from '$lib/resources/defaultDiagram.bpmn?raw';
 
 	const currentIdDiagram = page.url.pathname.replace('/bpmn/', '');
@@ -14,16 +14,16 @@
 	let otherOptions = $state<boolean>(false);
 
 	let diagramName = $state('');
-  let initialDiagramName = '';
-  let isLoading = $state(true);
+	let initialDiagramName = '';
+	let isLoading = $state(true);
 
 	async function handleUpdate() {
-    if (!modeler || isLoading) {
-			toast.info("El editor aún no está listo o está cargando.");
+		if (!modeler || isLoading) {
+			toast.info('El editor aún no está listo o está cargando.');
 			return;
-    }
+		}
 		const { xml } = await modeler.saveXML({ format: true });
-		const nameToSend = diagramName.trim() === '' ? initialDiagramName : diagramName.trim(); 
+		const nameToSend = diagramName.trim() === '' ? initialDiagramName : diagramName.trim();
 
 		if (nameToSend.trim() === '') {
 			toast.error('El nombre del diagrama no puede estar vacío.');
@@ -33,27 +33,30 @@
 		await updatedDiagram(currentIdDiagram, {
 			name: nameToSend,
 			bpmnXml: xml || '',
-			screenShot: ""
+			screenShot: ''
 		});
-		
+
 		if (nameToSend !== initialDiagramName) {
-				initialDiagramName = nameToSend;
+			initialDiagramName = nameToSend;
 		}
-  }
-		
+	}
+
 	onMount(async () => {
-		await new Promise(resolve => setTimeout(resolve, 0));
+		await new Promise((resolve) => setTimeout(resolve, 0));
 		if (!canvasContainerElement) {
-      toast.error("Error crítico: No se pudo inicializar el área de dibujo, intente más tarde.", 10000);
-      isLoading = false;
-      return;
-    }
+			toast.error(
+				'Error crítico: No se pudo inicializar el área de dibujo, intente más tarde.',
+				10000
+			);
+			isLoading = false;
+			return;
+		}
 
 		try {
 			isLoading = true;
 
 			modeler = new BpmnModeler({
-				container: canvasContainerElement,
+				container: canvasContainerElement
 			});
 
 			const diagramData = await getDiagramById(currentIdDiagram);
@@ -71,10 +74,12 @@
 			} else {
 				await modeler.importXML(defaultDiagram);
 			}
-
 		} catch (err: any) {
 			console.error('Error al cargar el diagrama:', err);
-			toast.error('Ocurrió un error al cargar el diagrama. Intenta recargar la página o contacta soporte.', 8000);
+			toast.error(
+				'Ocurrió un error al cargar el diagrama. Intenta recargar la página o contacta soporte.',
+				8000
+			);
 		} finally {
 			isLoading = false;
 		}
@@ -108,34 +113,31 @@
 	});
 </script>
 
-<div
-  class="fixed top-24 left-0 h-full w-full border border-gray-300 bg-white"
-  id="js-drop-zone"
->
-	<div class="h-full w-full relative" id="js-canvas" bind:this={canvasContainerElement}>
-		<div class="fixed bottom-2 right-2 space-y-2 z-30">
+<div class="fixed top-24 left-0 h-full w-full border border-gray-300 bg-white" id="js-drop-zone">
+	<div class="relative h-full w-full" id="js-canvas" bind:this={canvasContainerElement}>
+		<div class="fixed right-2 bottom-2 z-30 space-y-2">
 			<div>
 				<div class="my-2">
 					{#if otherOptions}
 						<button
 							onclick={() => {}}
 							class="button-principal flex flex-row items-center gap-2 px-4!"
-							>
+						>
 							<Save /> Exportar diagrama
 						</button>
 					{/if}
 				</div>
 				<button
-					onclick={() => otherOptions = !otherOptions}
-					class="text-white p-1.5 rounded-md bg-gray-600 w-full cursor-pointer hover:bg-gray-500 transition duration-500"
+					onclick={() => (otherOptions = !otherOptions)}
+					class="w-full cursor-pointer rounded-md bg-gray-600 p-1.5 text-white transition duration-500 hover:bg-gray-500"
 				>
 					{otherOptions ? 'Ocultar opciones' : 'Mostrar más opciones'}
 				</button>
 			</div>
 			<button
 				onclick={handleUpdate}
-				class="button-secondary flex flex-row items-center w-full gap-2 px-4!"
-				>
+				class="button-secondary flex w-full flex-row items-center gap-2 px-4!"
+			>
 				<Save /> Guardar diagrama
 			</button>
 		</div>

@@ -38,7 +38,9 @@
 		>
 	</div>
 	<div class="bg-blue h-full} rounded-b-lg p-3">
-		<p class="text-background font-semibold truncate max-w-[98%]">{name}</p>
-		<p class="text-background text-xs pt-1 truncate max-w-[98%]">Última modificación: {timeSince(lastUpdated) || 'Desconocido'}</p>
+		<p class="text-background max-w-[98%] truncate font-semibold">{name}</p>
+		<p class="text-background max-w-[98%] truncate pt-1 text-xs">
+			Última modificación: {timeSince(lastUpdated) || 'Desconocido'}
+		</p>
 	</div>
 </div>

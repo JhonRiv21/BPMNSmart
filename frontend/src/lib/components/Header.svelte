@@ -27,9 +27,9 @@
 			{#if page.url.pathname === '/home' || page.url.pathname.includes('/bpmn')}
 				<button
 					type="button"
-					onclick={() => openModalLogout = !openModalLogout}
+					onclick={() => (openModalLogout = !openModalLogout)}
 					class="text-background bg-green hover:bg-green/80 cursor-pointer rounded-lg p-2.5 text-2xl transition duration-500"
-				><Logout /></button
+					><Logout /></button
 				>
 				{#if openModalLogout}
 					<form method="POST" action="/logout">

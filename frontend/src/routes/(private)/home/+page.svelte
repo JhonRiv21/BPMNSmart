@@ -9,8 +9,8 @@
 	import { toast } from 'store/toast';
 	const { data, form } = $props();
 
-	let processes = $state(data.processes)
-	
+	let processes = $state(data.processes);
+
 	let openModalCreate = $state(false);
 	let openModalImport = $state(false);
 	let openModalDelete = $state(false);
@@ -23,9 +23,11 @@
 	const handleFilter = (searchItem: string) => {
 		const search = normalize(searchItem);
 		if (!search) {
-      filterData = [...processes];
-    }
-		filterData = processes.filter((item: { name: string; }) => normalize(item.name).includes(search));
+			filterData = [...processes];
+		}
+		filterData = processes.filter((item: { name: string }) =>
+			normalize(item.name).includes(search)
+		);
 	};
 
 	$effect(() => {
@@ -33,17 +35,17 @@
 	});
 
 	$effect(() => {
-    if (form?.error) {
-      toast.error(form.error);
-    }
-  });
+		if (form?.error) {
+			toast.error(form.error);
+		}
+	});
 </script>
 
 <section class="p-5 md:p-10">
-	<div class="flex flex-col sm:flex-row items-center justify-between">
-		<h5 class="text-xl mr-auto">Directorio</h5>
+	<div class="flex flex-col items-center justify-between sm:flex-row">
+		<h5 class="mr-auto text-xl">Directorio</h5>
 
-		<div class="flex flex-wrap pt-5 sm:pt-0 sm:flex-row items-center gap-5">
+		<div class="flex flex-wrap items-center gap-5 pt-5 sm:flex-row sm:pt-0">
 			<button
 				onclick={() => (openModalCreate = true)}
 				class="button-principal flex flex-row items-center gap-2"
@@ -107,11 +109,7 @@
 </section>
 
 {#if openModalCreate}
-	<form 
-		method="POST" 
-		action="?/create" 
-		use:enhance
-	>
+	<form method="POST" action="?/create" use:enhance>
 		<Modal
 			title="Creación de diagrama"
 			text="Ingrese el nombre de su diagrama (Max. 30 dígitos)"
@@ -131,7 +129,7 @@
 					class="mt-1 w-full rounded-lg border border-gray-400 px-3 py-2"
 				/>
 				{#if form?.errors?.nameCreate}
-					<p class="text-sm text-red-500 mt-1">{form.errors.nameCreate}</p>
+					<p class="mt-1 text-sm text-red-500">{form.errors.nameCreate}</p>
 				{/if}
 			</div>
 		</Modal>
@@ -169,24 +167,24 @@
 {/if}
 
 {#if openModalDelete && idReferenced}
-	<form 
+	<form
 		method="POST"
-		action="?/delete" 
+		action="?/delete"
 		use:enhance={() => {
 			const currentIdDelete = idReferenced;
-			
+
 			return async ({ result }) => {
 				if (result.type === 'success' && result.data?.success) {
-					processes = processes.filter((p: { id: string | null; }) => p.id !== currentIdDelete);
+					processes = processes.filter((p: { id: string | null }) => p.id !== currentIdDelete);
 					openModalDelete = false;
-          idReferenced = null;
-					toast.success(result.data?.message)
+					idReferenced = null;
+					toast.success(String(result.data?.message));
 				} else if (result.type === 'failure' || (result.type === 'success' && result.data?.error)) {
 					openModalDelete = false;
-          idReferenced = null;
-					toast.error(result.data?.error)
+					idReferenced = null;
+					toast.error(String(result.data?.error));
 				}
-			}
+			};
 		}}
 	>
 		<input type="hidden" id="idDelete" name="idDelete" value={idReferenced} />
@@ -196,9 +194,9 @@
 			textAction="Eliminar diagrama"
 			colorAction="green"
 			onCancel={() => {
-        openModalDelete = false;
-        idReferenced = null;
-      }}
+				openModalDelete = false;
+				idReferenced = null;
+			}}
 			submitButton={true}
 		/>
 	</form>

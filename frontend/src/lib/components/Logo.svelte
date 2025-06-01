@@ -9,10 +9,7 @@
 	};
 
 	const managementRedirections = () => {
-		if (
-			page.url.pathname === '/' ||
-			page.url.pathname === '/demo'
-		) {
+		if (page.url.pathname === '/' || page.url.pathname === '/demo') {
 			goto('/');
 		}
 	};

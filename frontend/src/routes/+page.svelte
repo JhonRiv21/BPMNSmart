@@ -97,7 +97,7 @@
 						>flexibilidad, facilidad de uso y control avanzado de versiones.</span
 					>
 				</p>
-				<div class="flex justify-center max-w-xs mx-auto">
+				<div class="mx-auto flex max-w-xs justify-center">
 					<GoogleButton />
 				</div>
 			</div>

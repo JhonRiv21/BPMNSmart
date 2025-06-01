@@ -38,14 +38,14 @@
 </script>
 
 {#if currentToast?.open}
-	<div class="fixed top-6 inset-x-0 z-50 flex justify-center pointer-events-none">
+	<div class="pointer-events-none fixed inset-x-0 top-6 z-50 flex justify-center">
 		<div
 			transition:slide
-			class={`relative pointer-events-auto w-[95%] sm:w-[350px] rounded-xs shadow-xl text-white ${toastBgClass}`}
+			class={`pointer-events-auto relative w-[95%] rounded-xs text-white shadow-xl sm:w-[350px] ${toastBgClass}`}
 			style="font-family: 'Inter', sans-serif;"
 		>
 			<button
-				class="absolute top-3.5 right-2 text-white text-3xl opacity-80 hover:opacity-100 transition-opacity duration-200 cursor-pointer"
+				class="absolute top-3.5 right-2 cursor-pointer text-3xl text-white opacity-80 transition-opacity duration-200 hover:opacity-100"
 				onclick={() => toast.close()}
 				aria-label="Cerrar notificación"
 			>
@@ -57,10 +57,10 @@
 			</div>
 
 			<div
-				class={`absolute bottom-0 left-0 w-full h-1.5 rounded-b overflow-hidden ${toastBarBgClass}`}
+				class={`absolute bottom-0 left-0 h-1.5 w-full overflow-hidden rounded-b ${toastBarBgClass}`}
 			>
 				<div
-					class={`h-full transition-[width] duration-100 linear ${toastBarClass}`}
+					class={`linear h-full transition-[width] duration-100 ${toastBarClass}`}
 					style={`width: ${currentToast.progress}%`}
 				></div>
 			</div>
