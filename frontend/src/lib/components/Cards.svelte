@@ -9,9 +9,10 @@
 		lastUpdated: string;
 		trashAction: () => void;
 		redirection: string;
+		image: string
 	};
 
-	const { name, lastUpdated, trashAction, redirection }: Props = $props();
+	const { name, lastUpdated, trashAction, redirection, image }: Props = $props();
 </script>
 
 <div
@@ -23,19 +24,28 @@
 	}}
 	class="cursor-pointer rounded-lg border border-gray-500 shadow-lg"
 >
-	<div class="relative h-32 rounded-t-lg bg-gray-200">
+	<div class="relative h-32 rounded-t-lg bg-white overflow-hidden">
+		{#if image}
+			<img
+				src={image}
+				alt={`${name} image`}
+				class="absolute inset-0 h-full w-full object-cover"
+			/>
+		{/if}
 		<button
 			type="button"
 			onclick={trashAction}
-			class="absolute top-1 right-12 cursor-pointer rounded-md p-2 text-3xl transition duration-500 hover:bg-red-200"
-			><Trash /></button
+			class="absolute top-1 right-14 cursor-pointer rounded-md p-2 text-3xl transition duration-500 bg-red-50 hover:bg-red-200"
 		>
+			<Trash />
+		</button>
 		<button
 			type="button"
 			onclick={() => goto(redirection)}
-			class="hover:bg-blue/20 absolute top-1 right-1 cursor-pointer rounded-md p-2 text-3xl transition duration-500"
-			><Pencil /></button
+			class="bg-blue-50 hover:bg-blue/20 absolute top-1 right-1 cursor-pointer rounded-md p-2 text-3xl transition duration-500"
 		>
+			<Pencil />
+		</button>
 	</div>
 	<div class="bg-blue h-full} rounded-b-lg p-3">
 		<p class="text-background max-w-[98%] truncate font-semibold">{name}</p>

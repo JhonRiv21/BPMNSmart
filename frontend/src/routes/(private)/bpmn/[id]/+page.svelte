@@ -7,6 +7,7 @@
 	import { page } from '$app/state';
 	import { toast } from 'store/toast';
 	import defaultDiagram from '$lib/resources/defaultDiagram.bpmn?raw';
+	import { debounce, sanitizeString } from '$lib/utils/utils';
 
 	const currentIdDiagram = page.url.pathname.replace('/bpmn/', '');
 	let modeler: BpmnModeler | null = null;
@@ -16,6 +17,54 @@
 	let diagramName = $state('');
 	let initialDiagramName = '';
 	let isLoading = $state(true);
+
+	const exportDiagram = debounce(async () => {
+		try {
+			if (!modeler) return toast.error("No es posible exportar");
+			const { xml } = await modeler.saveXML({ format: true });
+			if (!xml) {
+				return toast.error("El XML está vacío o no se pudo generar.");
+			}
+			const fileName = `bpmnsmart-${sanitizeString(diagramName || 'diagram')}.xml`;
+			const blob = new Blob([xml], { type: 'application/xml' });
+			const url = URL.createObjectURL(blob);
+			const link = document.createElement('a');
+			link.href = url;
+			link.download = fileName;
+			link.click();
+			URL.revokeObjectURL(url);
+		} catch (err) {
+			console.error("Error al exportar diagrama: ", err);
+			toast.error("No se pudo exportar el diagrama.");
+		}
+	}, 500);
+
+	async function handleScreenshot(): Promise<string> {
+		if (!modeler) return '';
+		const canvas = modeler.get('canvas');
+		const svg = await modeler.saveSVG();
+		const svgBlob = new Blob([svg.svg], { type: 'image/svg+xml;charset=utf-8' });
+
+		return await new Promise<string>((resolve) => {
+			const reader = new FileReader();
+			reader.onloadend = () => {
+				const svgDataUrl = reader.result as string;
+				const image = new Image();
+				image.onload = () => {
+					const canvasElement = document.createElement('canvas');
+					canvasElement.width = image.width;
+					canvasElement.height = image.height;
+					const ctx = canvasElement.getContext('2d');
+					if (!ctx) return resolve('');
+					ctx.drawImage(image, 0, 0);
+					const pngDataUrl = canvasElement.toDataURL('image/png');
+					resolve(pngDataUrl);
+				};
+				image.src = svgDataUrl;
+			};
+			reader.readAsDataURL(svgBlob);
+		});
+	}
 
 	async function handleUpdate() {
 		if (!modeler || isLoading) {
@@ -30,10 +79,12 @@
 			return;
 		}
 
+		const takeScreenShot = await handleScreenshot();
+
 		await updatedDiagram(currentIdDiagram, {
 			name: nameToSend,
 			bpmnXml: xml || '',
-			screenShot: ''
+			screenShot: takeScreenShot || ''
 		});
 
 		if (nameToSend !== initialDiagramName) {
@@ -117,10 +168,21 @@
 	<div class="relative h-full w-full" id="js-canvas" bind:this={canvasContainerElement}>
 		<div class="fixed right-2 bottom-2 z-30 space-y-2">
 			<div>
-				<div class="my-2">
+				<div class="my-2 space-y-2">
 					{#if otherOptions}
+						<div class="flex flex-col bg-slate-100 p-2 rounded-md">
+							<label for="diagramName">Nombre del diagrama</label>
+							<input
+							 	id="diagramName"
+								bind:value={diagramName}
+							  oninput={(e: Event) => {
+									const input = e.currentTarget as HTMLInputElement;
+									diagramName = sanitizeString(input.value);
+								}}
+							  class="border py-2 px-2 rounded-md" />
+						</div>
 						<button
-							onclick={() => {}}
+							onclick={exportDiagram}
 							class="button-principal flex flex-row items-center gap-2 px-4!"
 						>
 							<Save /> Exportar diagrama

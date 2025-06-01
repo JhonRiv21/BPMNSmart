@@ -2,8 +2,7 @@ import { PUBLIC_API_URL } from '$env/static/public';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { z } from 'zod';
-
-const sanitizeString = (str: string) => str.replace(/[^a-zA-Z0-9 áéíóúÁÉÍÓÚñÑ\-_]/g, '');
+import { sanitizeString } from '$lib/utils/utils';
 
 const nameDiagram = z.object({
 	nameCreate: z

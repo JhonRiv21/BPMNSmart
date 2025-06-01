@@ -2,7 +2,7 @@ import { writable } from 'svelte/store';
 
 type ToastType = 'success' | 'error' | 'warning' | 'info';
 
-interface ToastState {
+export interface ToastState {
 	open: boolean;
 	title: string;
 	type: ToastType;

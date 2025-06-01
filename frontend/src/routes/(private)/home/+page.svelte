@@ -17,7 +17,7 @@
 
 	let idReferenced = $state<string | null>(null);
 
-	let filterData = $state([...processes]);
+	let filterData = $derived([...processes]);
 	let searchDiagram = $state('');
 
 	const handleFilter = (searchItem: string) => {
@@ -97,6 +97,7 @@
 						name={item.name}
 						lastUpdated={item.updatedAt}
 						redirection={`/bpmn/${item.id}`}
+						image={item.screenShot}
 						trashAction={() => {
 							idReferenced = item.id;
 							openModalDelete = true;
