@@ -11,14 +11,18 @@
 
 	let processes = $state(data.processes);
 
-	let openModalCreate = $state(false);
-	let openModalImport = $state(false);
-	let openModalDelete = $state(false);
+	let openModalCreate = $state<boolean>(false);
+	let openModalImport = $state<boolean>(false);
+	let openModalDelete = $state<boolean>(false);
 
 	let idReferenced = $state<string | null>(null);
 
 	let filterData = $derived([...processes]);
-	let searchDiagram = $state('');
+	let searchDiagram: string = $state('');
+
+	let bpmnXmlToImport: string = $state('');
+  let importFileError: string = $state('');
+  let importFileName: string = $state('');
 
 	const handleFilter = (searchItem: string) => {
 		const search = normalize(searchItem);
@@ -39,6 +43,61 @@
 			toast.error(form.error);
 		}
 	});
+
+	function handleFile(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    
+		importFileError = '';
+    bpmnXmlToImport = '';
+    importFileName = '';
+
+    if (!file) {
+			input.value = '';
+			return;
+    }
+
+    if (!file.name.endsWith('.bpmn') && !file.name.endsWith('.xml')) {
+      importFileError = 'Por favor selecciona un archivo .bpmn o .xml válido.';
+      input.value = '';
+      return;
+    }
+
+    importFileName = file.name;
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const text = reader.result?.toString() ?? '';
+      if (!(text.includes('<bpmn:definitions') || text.includes('<bpmn2:definitions') || text.includes('<definitions'))) {
+        importFileError = 'El contenido del archivo no parece ser un BPMN válido.';
+        bpmnXmlToImport = '';
+        input.value = '';
+        importFileName = '';
+        return;
+      }
+      bpmnXmlToImport = text;
+      importFileError = '';
+    };
+
+    reader.onerror = () => {
+        importFileError = 'Error al leer el archivo.';
+        bpmnXmlToImport = '';
+        input.value = '';
+        importFileName = '';
+    };
+    reader.readAsText(file);
+  }
+
+	function resetImportModal() {
+    openModalImport = false;
+    bpmnXmlToImport = '';
+    importFileError = '';
+    importFileName = '';
+    const fileInput = document.getElementById('bpmnFileImportInput') as HTMLInputElement;
+    if (fileInput) {
+        fileInput.value = '';
+    }
+  }
 </script>
 
 <section class="p-5 md:p-10">
@@ -138,33 +197,49 @@
 {/if}
 
 {#if openModalImport}
-	<Modal
-		title="Importación de diagrama"
-		text="SOLO EN FORMATO XML/BPMN"
-		textAction="Crear diagrama"
-		onCancel={() => (openModalImport = false)}
-		onAction={() => (openModalImport = false)}
-	>
-		<form class="w-full">
-			<div class="w-full space-y-2">
-				<label for="nameDiagramImported">Nombre</label>
-				<input
-					type="text"
-					name="nameDiagramImported"
-					id="nameDiagramImported"
-					placeholder="Inserte"
-					class="mt-1 w-full rounded-lg border border-gray-400 px-3 py-2"
-				/>
-			</div>
+  <form 
+    method="POST" 
+    action="?/import" 
+    enctype="multipart/form-data" 
+    use:enhance
+  >
+    <Modal
+      title="Importación de diagrama"
+      text="SOLO EN FORMATO XML/BPMN"
+      textAction="Importar diagrama"
+      onCancel={resetImportModal} submitButton={true}
+    >
+      <div class="space-y-2">
+        <label for="nameDiagramImported">Nombre</label>
+        <input
+          type="text"
+          name="nameDiagram" id="nameDiagramImported"
+          value={form?.values?.nameCreate ?? ''} placeholder="Inserte"
+          maxlength="30"
+          class="mt-1 w-full rounded-lg border border-gray-400 px-3 py-2"
+        />
+        {#if form?.errors?.nameCreate} <p class="mt-1 text-sm text-red-500">{form.errors.nameCreate[0]}</p>
+        {/if}
+      </div>
 
-			<div class="mt-5 w-full rounded-md border border-gray-400 p-5">
-				<div class="flex w-full flex-row items-center justify-between">
-					<button class="button-secondary px-4! py-2! text-base!">Subir archivo</button>
-					<p>Sin archivos seleccionados</p>
-				</div>
-			</div>
-		</form>
-	</Modal>
+      <div class="mt-5 space-y-2">
+        <label for="bpmnFileImportInput">Archivo XML/BPMN</label> <input
+          id="bpmnFileImportInput" type="file"
+          name="bpmnFile" accept=".xml,.bpmn"
+          onchange={handleFile}
+          class="block w-full text-sm text-gray-500 file:mr-4 file:rounded-md file:border-0 file:bg-blue-600 file:px-4 file:py-2 file:text-white"
+        />
+        {#if importFileName && !importFileError}
+            <p class="text-sm text-gray-600 mt-1">Archivo: <span class="font-medium">{importFileName}</span></p>
+        {/if}
+        {#if importFileError}
+          <p class="text-sm text-red-500 mt-1">{importFileError}</p>
+        {/if}
+      </div>
+
+      <input type="hidden" name="bpmnXml" value={bpmnXmlToImport} />
+    </Modal>
+  </form>
 {/if}
 
 {#if openModalDelete && idReferenced}

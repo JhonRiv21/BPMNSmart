@@ -12,6 +12,7 @@ const nameDiagram = z.object({
 		.max(50, { message: 'Máximo 50 caracteres' })
 		.transform(sanitizeString)
 });
+
 export const load: PageServerLoad = async ({ cookies }) => {
 	const token = cookies.get('token');
 
@@ -107,6 +108,93 @@ export const actions: Actions = {
 
 		throw redirect(303, `/bpmn/${created.data.id}`);
 	},
+
+
+
+	import: async ({ cookies, request }) => {
+		const token = cookies.get('token');
+		const formData = await request.formData();
+		const name = formData.get('nameDiagram')?.toString();
+		const xml = formData.get('bpmnXml')?.toString();
+
+		const validationResult = nameDiagram.safeParse({ nameCreate: name });
+		const validatedName = validationResult.data?.nameCreate;
+
+		let created;
+
+		if (!token) {
+			return fail(401, {
+				error: 'Token no proporcionado o inválido.',
+				values: { nameCreate: validatedName }
+			});
+		}
+
+		if (!validationResult.success) {
+			const errors = validationResult.error.flatten().fieldErrors;
+			return fail(400, {
+				errors,
+				values: { nameCreate: name }
+			});
+		}
+
+		if (!xml) {
+			return fail(400, {
+				error: 'Debe subir un archivo BPMN',
+				values: { nameCreate: validatedName }
+			});
+		}
+
+		if ((!xml.includes('<bpmn:definitions') && !xml.includes('<bpmn2:definitions'))) {
+			return fail(400, {
+				error: 'El archivo BPMN proporcionado no es válido.',
+				values: { nameCreate: validatedName }
+			});
+		}
+
+		try {
+			const res = await fetch(`${PUBLIC_API_URL}/api/process/create`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${token}`
+				},
+				body: JSON.stringify({
+					name: validatedName,
+					bpmnXml: xml,
+					screenShot: ''
+				})
+			});
+
+			if (!res.ok) {
+				let errorToReturnToClient = 'Error al importar el diagrama, intente más tarde.';
+				try {
+					const errorBody = await res.json();
+					if (errorBody?.error === 'Ya tienes un proceso con ese nombre.') {
+						errorToReturnToClient = errorBody.error;
+					}
+				} catch (e) {
+					console.error('Error al leer el JSON de error en import:', e);
+				}
+
+				return fail(res.status, {
+					error: errorToReturnToClient,
+					values: { nameCreate: validatedName }
+				});
+			}
+
+			created = await res.json();
+			console.log(created)
+		} catch (err) {
+			console.error('Error de red al importar:', err);
+			return fail(500, {
+				error: 'No se pudo conectar con el servidor. Intente más tarde.',
+				values: { nameCreate: validatedName }
+			});
+		}
+		throw redirect(303, `/bpmn/${created.data.id}`);
+	},
+
+	
 
 	delete: async ({ request, cookies }) => {
 		const token = cookies.get('token');

@@ -120,7 +120,7 @@
 			diagramName = diagramData.name || 'Diagrama sin Título';
 			initialDiagramName = diagramName;
 
-			if (diagramData.bpmnXml?.trim()) {
+			if (diagramData.bpmnXml && diagramData.bpmnXml.trim().length > 0) {
 				await modeler.importXML(diagramData.bpmnXml);
 			} else {
 				await modeler.importXML(defaultDiagram);

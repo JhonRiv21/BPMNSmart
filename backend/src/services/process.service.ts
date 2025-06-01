@@ -34,6 +34,8 @@ export const createProcessForUser = async (
   userId: string,
   data: {
     name: string;
+    bpmnXml?: string;
+    screenShot?: string;
   }
 ) => {
 
@@ -52,8 +54,8 @@ export const createProcessForUser = async (
     data: {
       name: data.name,
       createdFor: userId,
-      bpmnXml: '',
-      screenShot: '',
+      bpmnXml: data.bpmnXml ?? '',
+      screenShot: data.screenShot ?? '',
     },
   });
 };

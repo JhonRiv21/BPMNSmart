@@ -46,7 +46,7 @@ export const createProcess = async (
   req: AuthenticatedRequest,
   res: Response
 ) => {
-  const { name } = req.body;
+  const { name, bpmnXml, screenShot } = req.body;
   const userId = req.user?.id;
 
   if (!userId) return res.status(401).json({ error: 'Usuario no autenticado' });
@@ -60,6 +60,8 @@ export const createProcess = async (
   try {
     const created = await processService.createProcessForUser(userId, {
       name,
+      bpmnXml, 
+      screenShot
     });
     res.status(201).json({
       message: 'Proceso creado correctamente',
