@@ -25,7 +25,7 @@ export const load: PageServerLoad = async ({ cookies }) => {
 		if (!res.ok) throw new Error('Error fetching processes');
 
 		const data = await res.json();
-
+		
 		return {
 			processes: data
 		};

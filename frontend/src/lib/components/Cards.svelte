@@ -13,6 +13,10 @@
 	};
 
 	const { name, lastUpdated, trashAction, redirection, image }: Props = $props();
+
+	function isValidImage(image: string): boolean {
+		return image.startsWith('data:image/');
+	}
 </script>
 
 <div
@@ -25,12 +29,14 @@
 	class="cursor-pointer rounded-lg border border-gray-500 shadow-lg"
 >
 	<div class="relative h-32 rounded-t-lg bg-white overflow-hidden">
-		{#if image}
+		{#if isValidImage(image)}
 			<img
 				src={image}
 				alt={`${name} image`}
 				class="absolute inset-0 h-full w-full object-cover"
 			/>
+		{:else}
+			<div class="absolute inset-0 h-full w-full bg-white"></div>
 		{/if}
 		<button
 			type="button"
