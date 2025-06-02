@@ -47,6 +47,15 @@ app.use('/auth', authRouter);
 app.use('/api/users', userRoutes);
 app.use('/api/process', processRoutes);
 
+app.get('/health', (_req, res) => {
+  res.json({ 
+    status: 'ok', 
+    timestamp: new Date().toISOString(),
+    env: process.env.NODE_ENV,
+    apiUrl: process.env.PUBLIC_API_URL
+  });
+});
+
 app.use((_req, res) => {
   res.status(404).json({ error: 'No encontrado' });
 });
