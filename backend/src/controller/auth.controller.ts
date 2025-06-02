@@ -11,7 +11,7 @@ export async function googleCallback(req: Request, res: Response, next: NextFunc
 
     const token = generateJwtToken(user);
     
-   res.cookie('token', token, {
+    res.cookie('token', token, {
       httpOnly: true,
       sameSite: 'lax',
       secure: process.env.NODE_ENV === 'production',
