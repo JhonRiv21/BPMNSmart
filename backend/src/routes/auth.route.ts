@@ -9,11 +9,24 @@ router.get(
   passport.authenticate('google', { scope: ['profile', 'email'] })
 );
 
-router.get(
-  '/google/callback',
+router.get('/google/callback', 
+  (req, res, next) => {
+    console.log('=== CALLBACK RECIBIDO ===');
+    console.log('Query:', req.query);
+    console.log('Host:', req.get('host'));
+    console.log('Protocol:', req.protocol);
+    console.log('X-Forwarded-Proto:', req.get('x-forwarded-proto'));
+    console.log('Full URL construida:', `${req.protocol}://${req.get('host')}${req.originalUrl}`);
+    
+    // Verificar si es Railway
+    const isRailway = req.get('host')?.includes('railway.app');
+    console.log('Es Railway:', isRailway);
+    console.log('=== FIN CALLBACK DEBUG ===');
+    next();
+  },
   passport.authenticate('google', {
-    failureRedirect: `${process.env.FRONTEND_URL || 'http://localhost:5173'}`,
-    session: false 
+    failureRedirect: `${process.env.FRONTEND_URL}?error=auth_failed`,
+    session: false
   }),
   googleCallback
 );
