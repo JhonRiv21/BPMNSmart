@@ -1,6 +1,6 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import jwt from 'jsonwebtoken';
-import { JWT_SECRET } from '$env/static/private';
+import { JWT_SECRET, SUPPORT_EMAIL } from '$env/static/private';
 
 export const POST: RequestHandler = async ({ request, cookies, fetch, url }) => {
 	const token = cookies.get('token');
@@ -45,7 +45,7 @@ export const POST: RequestHandler = async ({ request, cookies, fetch, url }) => 
 	forwardForm.append('_captcha', 'false');
 
 	try {
-		const res = await fetch('https://formsubmit.co/ajax/jhonrivero21@gmail.com', {
+		const res = await fetch(`https://formsubmit.co/ajax/${SUPPORT_EMAIL}`, {
 			method: 'POST',
 			body: forwardForm,
 			headers: {
