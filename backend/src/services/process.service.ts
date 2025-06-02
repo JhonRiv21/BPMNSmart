@@ -140,11 +140,15 @@ export const getProcessHistory = async (parentId: string, userId: string) => {
 
 // Delete process of the authenticated user by id
 export const deleteProcessForUser = async (id: string, userId: string) => {
-  const existing = prisma.process.findFirst({
+  const existing = await prisma.process.findFirst({
     where: { id, createdFor: userId },
   });
 
   if (!existing) return null;
+
+  await prisma.historical.deleteMany({
+    where: { parentId: id },
+  });
 
   return prisma.process.delete({
     where: { id },

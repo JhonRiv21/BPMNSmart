@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import BpmnModeler from 'bpmn-js/lib/Modeler';
-	import type CommandStack from 'diagram-js/lib/command/CommandStack';
 	import Save from '$lib/assets/icons/Save.svelte';
 	import { getDiagramById, updatedDiagram, updatedDiagramWithHistorical, getHistoricalProcess } from '$lib/services/Diagram';
 	import { page } from '$app/state';
@@ -11,6 +10,7 @@
 	import type { Historical } from '$lib/types/process';
 	import { timeSince } from '$lib/utils/utils';
 	import { setupKeyboardShortcuts } from '$lib/functions/keyboardShortcuts';
+	import { exportBpmnDiagram } from '$lib/functions/exportDiagram';
 
 	const currentIdDiagram = page.url.pathname.replace('/bpmn/', '');
 	let modeler: BpmnModeler | null = null;
@@ -24,25 +24,8 @@
 	let versionHistory = $state<Historical[]>([]);
 
 	const exportDiagram = debounce(async () => {
-		try {
-			if (!modeler) return toast.error("No es posible exportar");
-			const { xml } = await modeler.saveXML({ format: true });
-			if (!xml) {
-				return toast.error("El XML está vacío o no se pudo generar.");
-			}
-			const fileName = `bpmnsmart-${sanitizeString(diagramName || 'diagram')}.xml`;
-			const blob = new Blob([xml], { type: 'application/xml' });
-			const url = URL.createObjectURL(blob);
-			const link = document.createElement('a');
-			link.href = url;
-			link.download = fileName;
-			link.click();
-			URL.revokeObjectURL(url);
-		} catch (err) {
-			console.error("Error al exportar diagrama: ", err);
-			toast.error("No se pudo exportar el diagrama.");
-		}
-	}, 500);
+    await exportBpmnDiagram(modeler, diagramName);
+  }, 500);
 
 	async function handleScreenshot(): Promise<string> {
 		if (!modeler) return '';
@@ -76,12 +59,12 @@
 		try {
 			const { xml } = await modeler.saveXML({ format: true });
 			const nameToSend = diagramName.trim() === '' ? initialDiagramName : diagramName.trim();
-			const screenshot = await handleScreenshot();
+			const takeScreenShot = await handleScreenshot();
 
 			await updatedDiagram(currentIdDiagram, {
 				name: nameToSend,
 				bpmnXml: xml || '',
-				screenShot: screenshot || ''
+				screenShot: takeScreenShot || ''
 			});
 		} catch (err) {
 			console.error('Error en autoguardado:', err);
