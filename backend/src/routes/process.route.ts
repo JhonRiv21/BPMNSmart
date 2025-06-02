@@ -14,7 +14,7 @@ router.get(
   processController.getProcessById as RequestHandler
 );
 router.get(
-  '/historical',
+  '/historical/:id',
   verifyToken as RequestHandler,
   processController.getProcessHistory as RequestHandler
 );

@@ -134,7 +134,7 @@ export const getProcessHistory = async (parentId: string, userId: string) => {
       parentId,
       createdFor: userId
     },
-    orderBy: { createdAt: 'desc' },
+    orderBy: { createdAt: 'asc' },
   });
 };
 

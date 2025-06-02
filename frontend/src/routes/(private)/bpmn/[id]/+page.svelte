@@ -3,11 +3,14 @@
 	import BpmnModeler from 'bpmn-js/lib/Modeler';
 	import type CommandStack from 'diagram-js/lib/command/CommandStack';
 	import Save from '$lib/assets/icons/Save.svelte';
-	import { getDiagramById, updatedDiagram } from '$lib/services/Diagram';
+	import { getDiagramById, updatedDiagram, updatedDiagramWithHistorical, getHistoricalProcess } from '$lib/services/Diagram';
 	import { page } from '$app/state';
 	import { toast } from 'store/toast';
 	import defaultDiagram from '$lib/resources/defaultDiagram.bpmn?raw';
 	import { debounce, sanitizeString } from '$lib/utils/utils';
+	import type { Historical } from '$lib/types/process';
+	import { timeSince } from '$lib/utils/utils';
+	import { setupKeyboardShortcuts } from '$lib/functions/keyboardShortcuts';
 
 	const currentIdDiagram = page.url.pathname.replace('/bpmn/', '');
 	let modeler: BpmnModeler | null = null;
@@ -17,6 +20,8 @@
 	let diagramName = $state('');
 	let initialDiagramName = '';
 	let isLoading = $state(true);
+	let showVersionHistory = $state(false);
+	let versionHistory = $state<Historical[]>([]);
 
 	const exportDiagram = debounce(async () => {
 		try {
@@ -99,7 +104,7 @@
 
 		const takeScreenShot = await handleScreenshot();
 
-		await updatedDiagram(currentIdDiagram, {
+		await updatedDiagramWithHistorical(currentIdDiagram, {
 			name: nameToSend,
 			bpmnXml: xml || '',
 			screenShot: takeScreenShot || ''
@@ -109,6 +114,24 @@
 
 		if (nameToSend !== initialDiagramName) {
 			initialDiagramName = nameToSend;
+		}
+
+		try {
+			const history = await getHistoricalProcess(currentIdDiagram);
+			versionHistory = history || [];
+		} catch (e) {
+			console.error('Error al cargar el historial del diagrama:', e);
+		}
+	}
+
+	async function loadHistoricalVersion(xml: string) {
+		if (!modeler) return toast.error('Modeler no inicializado');
+		try {
+			await modeler.importXML(xml);
+			toast.success('Versión cargada correctamente');
+		} catch (err) {
+			console.error('Error al importar versión del historial:', err);
+			toast.error('Error al cargar esta versión del historial.');
 		}
 	}
 
@@ -145,6 +168,13 @@
 			} else {
 				await modeler.importXML(defaultDiagram);
 			}
+
+			try {
+				const history = await getHistoricalProcess(currentIdDiagram);
+				versionHistory = history || [];
+			} catch (e) {
+				console.error('Error al cargar el historial del diagrama:', e);
+			}
 		} catch (err: any) {
 			console.error('Error al cargar el diagrama:', err);
 			toast.error(
@@ -154,32 +184,13 @@
 		} finally {
 			isLoading = false;
 		}
-
 		if (modeler) {
 			setTimeout(() => {
 				const poweredBy = document.querySelector('.bjs-powered-by') as HTMLElement | null;
 				if (poweredBy) poweredBy.style.display = 'none';
 			}, 100);
 
-			// Keyboard events
-			const commandStack: CommandStack = modeler.get<CommandStack>('commandStack');
-
-			window.addEventListener('keydown', (event) => {
-				if (event.ctrlKey || event.metaKey) {
-					switch (event.key) {
-						case 'z':
-							if (commandStack.canUndo()) {
-								commandStack.undo();
-							}
-							break;
-						case 'y':
-							if (commandStack.canRedo()) {
-								commandStack.redo();
-							}
-							break;
-					}
-				}
-			});
+			setupKeyboardShortcuts(modeler);
 
 			modeler.on('commandStack.changed', function() {
 				handleAutoSave();
@@ -193,9 +204,42 @@
 		<div class="fixed right-2 bottom-2 z-30 space-y-2">
 			<div>
 				<div class="my-2 space-y-2">
+					{#if showVersionHistory}
+						<div class="flex flex-col bg-gray-200 p-2 rounded-md space-y-1.5 overflow-y-auto max-h-60">
+							{#if versionHistory && versionHistory.length > 0}
+								{#each versionHistory as version, index (version.id)}
+									<button
+										class="text-left cursor-pointer text-xs px-3 py-2 rounded-md transition-colors duration-150
+										hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-black
+										{index % 2 === 0 ? 'bg-white' : 'bg-gray-100'}"
+										onclick={() => loadHistoricalVersion(version.bpmnXml)}
+									>
+										Versión {index + 1}
+										<br> 
+										{timeSince(version.updatedAt) || 'Desconocido'}
+									</button>
+								{/each}
+							{:else}
+								<p class="text-sm text-gray-600">No hay versiones disponibles</p>
+							{/if}
+						</div>
+					{/if}
+				</div>
+
+				<button
+					onclick={() => {
+						showVersionHistory = !showVersionHistory;
+						otherOptions = false;
+					}}
+					class="w-full text-sm cursor-pointer rounded-md bg-[#1A1A1A] p-1.5 text-white transition duration-500 hover:bg-[#1A1A1A]/90"
+				>
+					{showVersionHistory ? 'Ocultar historial de versiones' : 'Mostrar historial de versiones'}
+				</button>
+				
+				<div class="my-2 space-y-2">
 					{#if otherOptions}
 						<div class="flex flex-col bg-slate-100 p-2 rounded-md">
-							<label for="diagramName" class="bg">Nombre del diagrama</label>
+							<label for="diagramName" class="text-sm pb-0.5">Nombre del diagrama</label>
 							<input
 							 	id="diagramName"
 								bind:value={diagramName}
@@ -214,7 +258,10 @@
 					{/if}
 				</div>
 				<button
-					onclick={() => (otherOptions = !otherOptions)}
+					onclick={() => {
+						otherOptions = !otherOptions
+						showVersionHistory = false;
+					}}
 					class="w-full cursor-pointer rounded-md bg-gray-600 p-1.5 text-white transition duration-500 hover:bg-gray-500"
 				>
 					{otherOptions ? 'Ocultar opciones' : 'Mostrar más opciones'}
