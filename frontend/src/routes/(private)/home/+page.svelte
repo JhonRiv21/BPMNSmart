@@ -7,6 +7,8 @@
 	import Modal from '$lib/components/Modal.svelte';
 	import { normalize } from '$lib/utils/utils';
 	import { toast } from 'store/toast';
+	import Support from '$lib/components/Support.svelte';
+
 	const { data, form } = $props();
 
 	let processes = $state(data.processes);
@@ -296,3 +298,5 @@
 		/>
 	</form>
 {/if}
+
+<Support />

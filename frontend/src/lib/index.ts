@@ -4,5 +4,6 @@ import image2 from '$lib/assets/image2.webp';
 import image3 from '$lib/assets/image3.webp';
 import image4 from '$lib/assets/image4.webp';
 import logo from '$lib/assets/logo.png';
+import support from '$lib/assets/support.png';
 
-export { image1, image2, image3, image4, logo };
+export { image1, image2, image3, image4, logo, support };
