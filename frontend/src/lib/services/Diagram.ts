@@ -28,7 +28,6 @@ export const updatedDiagram = async (id: string, data: UpdatePayload) => {
 		return;
 	}
 
-	toast.success('Diagrama actualizado correctamente');
 	return res.json();
 };
 

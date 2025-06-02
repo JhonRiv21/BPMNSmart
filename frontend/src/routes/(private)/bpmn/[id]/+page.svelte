@@ -41,7 +41,6 @@
 
 	async function handleScreenshot(): Promise<string> {
 		if (!modeler) return '';
-		const canvas = modeler.get('canvas');
 		const svg = await modeler.saveSVG();
 		const svgBlob = new Blob([svg.svg], { type: 'image/svg+xml;charset=utf-8' });
 
@@ -66,6 +65,25 @@
 		});
 	}
 
+	const handleAutoSave = debounce(async () => {
+		if (!modeler || isLoading) return;
+
+		try {
+			const { xml } = await modeler.saveXML({ format: true });
+			const nameToSend = diagramName.trim() === '' ? initialDiagramName : diagramName.trim();
+			const screenshot = await handleScreenshot();
+
+			await updatedDiagram(currentIdDiagram, {
+				name: nameToSend,
+				bpmnXml: xml || '',
+				screenShot: screenshot || ''
+			});
+		} catch (err) {
+			console.error('Error en autoguardado:', err);
+			toast.error('Error al guardar automáticamente el diagrama.');
+		}
+	}, 2000);
+
 	async function handleUpdate() {
 		if (!modeler || isLoading) {
 			toast.info('El editor aún no está listo o está cargando.');
@@ -86,6 +104,8 @@
 			bpmnXml: xml || '',
 			screenShot: takeScreenShot || ''
 		});
+		
+		toast.success('Diagrama actualizado correctamente');
 
 		if (nameToSend !== initialDiagramName) {
 			initialDiagramName = nameToSend;
@@ -97,7 +117,7 @@
 		if (!canvasContainerElement) {
 			toast.error(
 				'Error crítico: No se pudo inicializar el área de dibujo, intente más tarde.',
-				10000
+				8000
 			);
 			isLoading = false;
 			return;
@@ -142,7 +162,7 @@
 			}, 100);
 
 			// Keyboard events
-			let commandStack: CommandStack = modeler.get<CommandStack>('commandStack');
+			const commandStack: CommandStack = modeler.get<CommandStack>('commandStack');
 
 			window.addEventListener('keydown', (event) => {
 				if (event.ctrlKey || event.metaKey) {
@@ -159,6 +179,10 @@
 							break;
 					}
 				}
+			});
+
+			modeler.on('commandStack.changed', function() {
+				handleAutoSave();
 			});
 		}
 	});
