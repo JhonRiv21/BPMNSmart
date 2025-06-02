@@ -1,5 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+ 	import { fly } from 'svelte/transition';
+  import { quintOut } from 'svelte/easing';
 
 	type Props = {
 		title: string;
@@ -29,6 +31,7 @@
 	<div class="fixed inset-0 z-10 w-screen overflow-y-auto">
 		<div class="flex min-h-full items-end justify-center mr-3 p-4 text-center sm:items-center sm:mr-0 sm:p-0">
 			<div
+				transition:fly={{ y: 20, duration: 300, easing: quintOut }}
 				class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg"
 			>
 				<div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
