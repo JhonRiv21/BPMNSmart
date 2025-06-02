@@ -13,6 +13,11 @@ router.get(
   verifyToken as RequestHandler,
   processController.getProcessById as RequestHandler
 );
+router.get(
+  '/historical',
+  verifyToken as RequestHandler,
+  processController.getProcessHistory as RequestHandler
+);
 router.post(
   '/create',
   verifyToken as RequestHandler,
@@ -22,6 +27,11 @@ router.put(
   '/:id',
   verifyToken as RequestHandler,
   processController.updateProcess as RequestHandler
+);
+router.put(
+  '/historical/:id',
+  verifyToken as RequestHandler,
+  processController.updateProcessWithHistorical as RequestHandler
 );
 router.delete(
   '/:id',

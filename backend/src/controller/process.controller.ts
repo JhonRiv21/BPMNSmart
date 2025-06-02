@@ -111,6 +111,61 @@ export const updateProcess = async (
   }
 };
 
+// Update user process by id
+export const updateProcessWithHistorical = async (
+  req: AuthenticatedRequest,
+  res: Response
+) => {
+  const { id } = req.params;
+  const { name, bpmnXml, screenShot } = req.body;
+  const userId = req.user?.id;
+
+  if (!userId) return res.status(401).json({ error: 'Usuario no autenticado' });
+
+  if (name === undefined && bpmnXml === undefined && screenShot === undefined) {
+    return res.status(400).json({ error: 'No hay campos para actualizar' });
+  }
+
+  try {
+    const updated = await processService.updateProcessForUserWithHistorical(id, userId, {
+      name,
+      bpmnXml,
+      screenShot,
+    });
+
+    if (!updated)
+      return res
+        .status(404)
+        .json({ error: 'Proceso no encontrado o no autorizado' });
+
+    res.status(201).json({
+      message: 'Proceso actualizado correctamente',
+      data: updated,
+    });
+  } catch (e) {
+    res.status(500).json({ error: 'Error al actualizar el proceso' });
+  }
+};
+
+// Get process version history for a user
+export const getProcessHistory = async (
+  req: AuthenticatedRequest,
+  res: Response
+) => {
+  const { id: parentId } = req.params;
+  const userId = req.user?.id;
+
+  if (!userId) return res.status(401).json({ error: 'Usuario no autenticado' });
+
+  try {
+    const history = await processService.getProcessHistory(parentId, userId);
+    res.status(200).json({ data: history });
+  } catch (e) {
+    res.status(500).json({ error: 'Error al obtener historial del proceso' });
+  }
+};
+
+
 // Delete user process by id
 export const deleteProcess = async (
   req: AuthenticatedRequest,

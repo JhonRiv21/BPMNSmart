@@ -60,7 +60,7 @@ export const createProcessForUser = async (
   });
 };
 
-// Update process of the authenticated user by id
+// Update process of the authenticated user by id without historical (for autosave)
 export const updateProcessForUser = async (
   id: string,
   userId: string,
@@ -84,6 +84,57 @@ export const updateProcessForUser = async (
   return prisma.process.update({
     where: { id },
     data: updateData,
+  });
+};
+
+// Update process of the authenticated user by id WITH HISTORICAL
+export const updateProcessForUserWithHistorical = async (
+  id: string,
+  userId: string,
+  data: {
+    name: string;
+    bpmnXml?: string;
+    screenShot?: string | null;
+  }
+) => {
+  const existing = await prisma.process.findFirst({
+    where: { id, createdFor: userId },
+  });
+
+  if (!existing) return null;
+
+  const updateData: Record<string, any> = {};
+  if (data.name !== undefined) updateData.name = data.name;
+  if (data.bpmnXml !== undefined) updateData.bpmnXml = data.bpmnXml;
+  if (data.screenShot !== undefined) updateData.screenShot = data.screenShot;
+
+  const [_historical, updated] = await Promise.all([
+    prisma.historical.create({
+      data: {
+        parentId: existing.id,
+        name: existing.name,
+        bpmnXml: existing.bpmnXml,
+        screenShot: existing.screenShot,
+        createdFor: userId,
+      },
+    }),
+    prisma.process.update({
+      where: { id },
+      data: updateData,
+    }),
+  ]);
+
+  return updated;
+};
+
+// Obtain process history by user and diagram
+export const getProcessHistory = async (parentId: string, userId: string) => {
+  return prisma.historical.findMany({
+    where: {
+      parentId,
+      createdFor: userId
+    },
+    orderBy: { createdAt: 'desc' },
   });
 };
 

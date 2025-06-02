@@ -8,20 +8,35 @@ datasource db {
 }
 
 model User {
-  id        String    @id @default(uuid())
-  email     String    @unique
-  name      String
-  lastNames String
-  processes Process[]
+  id          String    @id @default(uuid())
+  email       String    @unique
+  name        String
+  lastNames   String
+  processes   Process[]
+  historicals Historical[]
 }
 
 model Process {
-  id         String   @id @default(uuid())
-  name       String
-  bpmnXml    String   @default("")
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  screenShot String   @default("")
-  createdFor String
-  user       User     @relation(fields: [createdFor], references: [id])
+  id          String   @id @default(uuid())
+  name        String
+  bpmnXml     String   @default("")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  screenShot  String   @default("")
+  createdFor  String
+  user        User     @relation(fields: [createdFor], references: [id])
+  historicals Historical[]  @relation("ProcessToHistorical")
+}
+
+model Historical {
+  id          String   @id @default(uuid())
+  parentId    String
+  parent      Process  @relation("ProcessToHistorical", fields: [parentId], references: [id])
+  name        String
+  bpmnXml     String   @default("")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  screenShot  String   @default("")
+  createdFor  String
+  user        User     @relation(fields: [createdFor], references: [id])
 }
