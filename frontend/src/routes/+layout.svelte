@@ -4,7 +4,8 @@
 	import { beforeNavigate, afterNavigate } from '$app/navigation';
 	import SkeletonLoader from '$lib/components/SkeletonLoader.svelte';
 	import Toast from '$lib/components/Toast.svelte';
-
+	import { fade } from 'svelte/transition';
+	import { page } from '$app/stores';
 	let loading = $state(false);
 	let { children } = $props();
 
@@ -18,11 +19,17 @@
 </script>
 
 <Header />
-<section class="mx-auto h-full max-w-screen-2xl">
-	{#if loading}
-		<SkeletonLoader />
-	{:else}
-		{@render children()}
-	{/if}
-</section>
+{#key $page.url.pathname}
+	<section
+		in:fade={{ delay: 250, duration: 250 }}
+		out:fade={{ duration: 250 }}
+		class="mx-auto h-full max-w-screen-2xl"
+	>
+		{#if loading}
+			<SkeletonLoader />
+		{:else}
+			{@render children()}
+		{/if}
+	</section>
+{/key}
 <Toast />

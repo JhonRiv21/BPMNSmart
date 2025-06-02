@@ -10,7 +10,11 @@ export const GET: RequestHandler = async (event) => {
 	}
 
 	try {
-		const resultFromApiCall = await fetchWithAuthFromServer(event, `/api/process/historical/${id}`, 'GET');
+		const resultFromApiCall = await fetchWithAuthFromServer(
+			event,
+			`/api/process/historical/${id}`,
+			'GET'
+		);
 
 		return json(resultFromApiCall.data, { status: resultFromApiCall.status });
 	} catch (error: any) {
@@ -20,4 +24,3 @@ export const GET: RequestHandler = async (event) => {
 		);
 	}
 };
-

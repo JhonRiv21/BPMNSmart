@@ -42,7 +42,7 @@
 	<div class="pointer-events-none fixed inset-x-0 top-6 z-50 flex justify-center">
 		<div
 			transition:slide
-			class={`pointer-events-auto font relative w-[95%] font-inter rounded-xs text-white shadow-xl sm:w-[350px] ${toastBgClass}`}
+			class={`font font-inter pointer-events-auto relative w-[95%] rounded-xs text-white shadow-xl sm:w-[350px] ${toastBgClass}`}
 		>
 			<button
 				class="absolute top-3.5 right-2 cursor-pointer text-3xl text-white opacity-80 transition-opacity duration-200 hover:opacity-100"

@@ -21,8 +21,8 @@
 	let searchDiagram: string = $state('');
 
 	let bpmnXmlToImport: string = $state('');
-  let importFileError: string = $state('');
-  let importFileName: string = $state('');
+	let importFileError: string = $state('');
+	let importFileName: string = $state('');
 
 	const handleFilter = (searchItem: string) => {
 		const search = normalize(searchItem);
@@ -45,59 +45,65 @@
 	});
 
 	function handleFile(event: Event) {
-    const input = event.target as HTMLInputElement;
-    const file = input.files?.[0];
-    
-		importFileError = '';
-    bpmnXmlToImport = '';
-    importFileName = '';
+		const input = event.target as HTMLInputElement;
+		const file = input.files?.[0];
 
-    if (!file) {
+		importFileError = '';
+		bpmnXmlToImport = '';
+		importFileName = '';
+
+		if (!file) {
 			input.value = '';
 			return;
-    }
+		}
 
-    if (!file.name.endsWith('.bpmn') && !file.name.endsWith('.xml')) {
-      importFileError = 'Por favor selecciona un archivo .bpmn o .xml válido.';
-      input.value = '';
-      return;
-    }
+		if (!file.name.endsWith('.bpmn') && !file.name.endsWith('.xml')) {
+			importFileError = 'Por favor selecciona un archivo .bpmn o .xml válido.';
+			input.value = '';
+			return;
+		}
 
-    importFileName = file.name;
-    const reader = new FileReader();
+		importFileName = file.name;
+		const reader = new FileReader();
 
-    reader.onload = () => {
-      const text = reader.result?.toString() ?? '';
-      if (!(text.includes('<bpmn:definitions') || text.includes('<bpmn2:definitions') || text.includes('<definitions'))) {
-        importFileError = 'El contenido del archivo no parece ser un BPMN válido.';
-        bpmnXmlToImport = '';
-        input.value = '';
-        importFileName = '';
-        return;
-      }
-      bpmnXmlToImport = text;
-      importFileError = '';
-    };
+		reader.onload = () => {
+			const text = reader.result?.toString() ?? '';
+			if (
+				!(
+					text.includes('<bpmn:definitions') ||
+					text.includes('<bpmn2:definitions') ||
+					text.includes('<definitions')
+				)
+			) {
+				importFileError = 'El contenido del archivo no parece ser un BPMN válido.';
+				bpmnXmlToImport = '';
+				input.value = '';
+				importFileName = '';
+				return;
+			}
+			bpmnXmlToImport = text;
+			importFileError = '';
+		};
 
-    reader.onerror = () => {
-        importFileError = 'Error al leer el archivo.';
-        bpmnXmlToImport = '';
-        input.value = '';
-        importFileName = '';
-    };
-    reader.readAsText(file);
-  }
+		reader.onerror = () => {
+			importFileError = 'Error al leer el archivo.';
+			bpmnXmlToImport = '';
+			input.value = '';
+			importFileName = '';
+		};
+		reader.readAsText(file);
+	}
 
 	function resetImportModal() {
-    openModalImport = false;
-    bpmnXmlToImport = '';
-    importFileError = '';
-    importFileName = '';
-    const fileInput = document.getElementById('bpmnFileImportInput') as HTMLInputElement;
-    if (fileInput) {
-        fileInput.value = '';
-    }
-  }
+		openModalImport = false;
+		bpmnXmlToImport = '';
+		importFileError = '';
+		importFileName = '';
+		const fileInput = document.getElementById('bpmnFileImportInput') as HTMLInputElement;
+		if (fileInput) {
+			fileInput.value = '';
+		}
+	}
 </script>
 
 <section class="p-5 md:p-10">
@@ -197,32 +203,31 @@
 {/if}
 
 {#if openModalImport}
-  <form 
-    method="POST" 
-    action="?/import" 
-    enctype="multipart/form-data" 
-    use:enhance
-  >
-    <Modal
-      title="Importación de diagrama"
-      text="SOLO EN FORMATO XML/BPMN"
-      textAction="Importar diagrama"
-      onCancel={resetImportModal} submitButton={true}
-    >
-      <div class="space-y-2">
-        <label for="nameDiagramImported">Nombre</label>
-        <input
-          type="text"
-          name="nameDiagram" id="nameDiagramImported"
-          value={form?.values?.nameCreate ?? ''} placeholder="Inserte"
-          maxlength="30"
-          class="mt-1 w-full rounded-lg border border-gray-400 px-3 py-2"
-        />
-        {#if form?.errors?.nameCreate} <p class="mt-1 text-sm text-red-500">{form.errors.nameCreate[0]}</p>
-        {/if}
-      </div>
+	<form method="POST" action="?/import" enctype="multipart/form-data" use:enhance>
+		<Modal
+			title="Importación de diagrama"
+			text="SOLO EN FORMATO XML/BPMN"
+			textAction="Importar diagrama"
+			onCancel={resetImportModal}
+			submitButton={true}
+		>
+			<div class="space-y-2">
+				<label for="nameDiagramImported">Nombre</label>
+				<input
+					type="text"
+					name="nameDiagram"
+					id="nameDiagramImported"
+					value={form?.values?.nameCreate ?? ''}
+					placeholder="Inserte"
+					maxlength="30"
+					class="mt-1 w-full rounded-lg border border-gray-400 px-3 py-2"
+				/>
+				{#if form?.errors?.nameCreate}
+					<p class="mt-1 text-sm text-red-500">{form.errors.nameCreate[0]}</p>
+				{/if}
+			</div>
 
-      <div class="mt-6 space-y-2">
+			<div class="mt-6 space-y-2">
 				<label for="bpmnFileImportInput" class="block text-sm font-medium text-gray-700">
 					Archivo XML/BPMN
 				</label>
@@ -234,26 +239,26 @@
 					accept=".xml,.bpmn"
 					onchange={handleFile}
 					class="block w-full text-sm text-gray-600
-								file:mr-4 file:rounded-md file:border-0
-								file:bg-blue-600 file:hover:bg-blue-700
-								file:px-4 file:py-2 file:text-white
-								file:cursor-pointer transition-colors duration-200"
+								transition-colors duration-200 file:mr-4
+								file:cursor-pointer file:rounded-md
+								file:border-0 file:bg-blue-600 file:px-4
+								file:py-2 file:text-white file:hover:bg-blue-700"
 				/>
 
 				{#if importFileName && !importFileError}
-					<p class="block sm:hidden text-sm text-green-600 mt-1">
+					<p class="mt-1 block text-sm text-green-600 sm:hidden">
 						Archivo: <span class="font-semibold">{importFileName}</span>
 					</p>
 				{/if}
 
 				{#if importFileError}
-					<p class="text-sm text-red-500 mt-1">{importFileError}</p>
+					<p class="mt-1 text-sm text-red-500">{importFileError}</p>
 				{/if}
 			</div>
 
-      <input type="hidden" name="bpmnXml" value={bpmnXmlToImport} />
-    </Modal>
-  </form>
+			<input type="hidden" name="bpmnXml" value={bpmnXmlToImport} />
+		</Modal>
+	</form>
 {/if}
 
 {#if openModalDelete && idReferenced}

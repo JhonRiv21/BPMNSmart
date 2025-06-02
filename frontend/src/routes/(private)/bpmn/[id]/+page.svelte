@@ -2,7 +2,12 @@
 	import { onMount } from 'svelte';
 	import BpmnModeler from 'bpmn-js/lib/Modeler';
 	import Save from '$lib/assets/icons/Save.svelte';
-	import { getDiagramById, updatedDiagram, updatedDiagramWithHistorical, getHistoricalProcess } from '$lib/services/Diagram';
+	import {
+		getDiagramById,
+		updatedDiagram,
+		updatedDiagramWithHistorical,
+		getHistoricalProcess
+	} from '$lib/services/Diagram';
 	import { page } from '$app/state';
 	import { toast } from 'store/toast';
 	import defaultDiagram from '$lib/resources/defaultDiagram.bpmn?raw';
@@ -25,12 +30,12 @@
 	let versionHistory = $state<Historical[]>([]);
 
 	const exportDiagram = debounce(async () => {
-    await exportBpmnDiagram(modeler, diagramName);
-  }, 500);
+		await exportBpmnDiagram(modeler, diagramName);
+	}, 500);
 
 	const takeScreenshot = async (): Promise<string> => {
-    return await generatePngScreenshot(modeler);
-  };
+		return await generatePngScreenshot(modeler);
+	};
 
 	const handleAutoSave = debounce(async () => {
 		if (!modeler || isLoading) return;
@@ -71,7 +76,7 @@
 			bpmnXml: xml || '',
 			screenShot: screenshot || ''
 		});
-		
+
 		toast.success('Diagrama actualizado correctamente');
 
 		if (nameToSend !== initialDiagramName) {
@@ -146,7 +151,7 @@
 		} finally {
 			isLoading = false;
 		}
-		
+
 		if (modeler) {
 			setTimeout(() => {
 				const poweredBy = document.querySelector('.bjs-powered-by') as HTMLElement | null;
@@ -155,7 +160,7 @@
 
 			setupKeyboardShortcuts(modeler);
 
-			modeler.on('commandStack.changed', function() {
+			modeler.on('commandStack.changed', function () {
 				handleAutoSave();
 			});
 		}
@@ -168,17 +173,19 @@
 			<div>
 				<div class="my-2 space-y-2">
 					{#if showVersionHistory}
-						<div class="flex flex-col bg-gray-200 p-2 rounded-md space-y-1.5 overflow-y-auto max-h-60">
+						<div
+							class="flex max-h-60 flex-col space-y-1.5 overflow-y-auto rounded-md bg-gray-200 p-2"
+						>
 							{#if versionHistory && versionHistory.length > 0}
 								{#each versionHistory as version, index (version.id)}
 									<button
-										class="text-left cursor-pointer text-xs px-3 py-2 rounded-md transition-colors duration-150
-										hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-black
+										class="cursor-pointer rounded-md px-3 py-2 text-left text-xs transition-colors duration-150
+										hover:bg-gray-300 focus:ring-2 focus:ring-black focus:outline-none
 										{index % 2 === 0 ? 'bg-white' : 'bg-gray-100'}"
 										onclick={() => loadHistoricalVersion(version.bpmnXml)}
 									>
 										Versión {index + 1}
-										<br> 
+										<br />
 										{timeSince(version.updatedAt) || 'Desconocido'}
 									</button>
 								{/each}
@@ -194,23 +201,24 @@
 						showVersionHistory = !showVersionHistory;
 						otherOptions = false;
 					}}
-					class="w-full text-sm cursor-pointer rounded-md bg-[#1A1A1A] p-1.5 text-white transition duration-500 hover:bg-[#1A1A1A]/90"
+					class="w-full cursor-pointer rounded-md bg-[#1A1A1A] p-1.5 text-sm text-white transition duration-500 hover:bg-[#1A1A1A]/90"
 				>
 					{showVersionHistory ? 'Ocultar historial de versiones' : 'Mostrar historial de versiones'}
 				</button>
-				
+
 				<div class="my-2 space-y-2">
 					{#if otherOptions}
-						<div class="flex flex-col bg-slate-100 p-2 rounded-md">
-							<label for="diagramName" class="text-sm pb-0.5">Nombre del diagrama</label>
+						<div class="flex flex-col rounded-md bg-slate-100 p-2">
+							<label for="diagramName" class="pb-0.5 text-sm">Nombre del diagrama</label>
 							<input
-							 	id="diagramName"
+								id="diagramName"
 								bind:value={diagramName}
-							  oninput={(e: Event) => {
+								oninput={(e: Event) => {
 									const input = e.currentTarget as HTMLInputElement;
 									diagramName = sanitizeString(input.value);
 								}}
-							  class="border bg-white/60 py-1.5 px-2 rounded-md" />
+								class="rounded-md border bg-white/60 px-2 py-1.5"
+							/>
 						</div>
 						<button
 							onclick={exportDiagram}
@@ -222,7 +230,7 @@
 				</div>
 				<button
 					onclick={() => {
-						otherOptions = !otherOptions
+						otherOptions = !otherOptions;
 						showVersionHistory = false;
 					}}
 					class="w-full cursor-pointer rounded-md bg-gray-600 p-1.5 text-white transition duration-500 hover:bg-gray-500"

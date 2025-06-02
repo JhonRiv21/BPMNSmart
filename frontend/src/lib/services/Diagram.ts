@@ -48,7 +48,7 @@ export const updatedDiagramWithHistorical = async (id: string, data: UpdatePaylo
 	}
 
 	return res.json();
-}
+};
 
 export const getDiagramById = async (id: string): Promise<DiagramData | null> => {
 	try {

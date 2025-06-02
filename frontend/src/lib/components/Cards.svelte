@@ -9,7 +9,7 @@
 		lastUpdated: string;
 		trashAction: () => void;
 		redirection: string;
-		image: string
+		image: string;
 	};
 
 	const { name, lastUpdated, trashAction, redirection, image }: Props = $props();
@@ -28,27 +28,23 @@
 	}}
 	class="cursor-pointer rounded-lg border border-gray-500 shadow-lg"
 >
-	<div class="relative h-32 rounded-t-lg bg-white overflow-hidden">
+	<div class="relative h-32 overflow-hidden rounded-t-lg bg-white">
 		{#if isValidImage(image)}
-			<img
-				src={image}
-				alt={`${name} image`}
-				class="absolute inset-0 h-full w-full object-cover"
-			/>
+			<img src={image} alt={`${name} image`} class="absolute inset-0 h-full w-full object-cover" />
 		{:else}
 			<div class="absolute inset-0 h-full w-full bg-white"></div>
 		{/if}
 		<button
 			type="button"
 			onclick={trashAction}
-			class="absolute top-1 right-14 cursor-pointer rounded-md p-2 text-3xl transition duration-500 bg-red-50 hover:bg-red-200"
+			class="absolute top-1 right-14 cursor-pointer rounded-md bg-red-50 p-2 text-3xl transition duration-500 hover:bg-red-200"
 		>
 			<Trash />
 		</button>
 		<button
 			type="button"
 			onclick={() => goto(redirection)}
-			class="bg-blue-50 hover:bg-blue/20 absolute top-1 right-1 cursor-pointer rounded-md p-2 text-3xl transition duration-500"
+			class="hover:bg-blue/20 absolute top-1 right-1 cursor-pointer rounded-md bg-blue-50 p-2 text-3xl transition duration-500"
 		>
 			<Pencil />
 		</button>

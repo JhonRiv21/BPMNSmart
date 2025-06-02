@@ -26,7 +26,7 @@ export const load: PageServerLoad = async ({ cookies }) => {
 		if (!res.ok) throw new Error('Error fetching processes');
 
 		const data = await res.json();
-		
+
 		return {
 			processes: data
 		};
@@ -109,8 +109,6 @@ export const actions: Actions = {
 		throw redirect(303, `/bpmn/${created.data.id}`);
 	},
 
-
-
 	import: async ({ cookies, request }) => {
 		const token = cookies.get('token');
 		const formData = await request.formData();
@@ -144,7 +142,7 @@ export const actions: Actions = {
 			});
 		}
 
-		if ((!xml.includes('<bpmn:definitions') && !xml.includes('<bpmn2:definitions'))) {
+		if (!xml.includes('<bpmn:definitions') && !xml.includes('<bpmn2:definitions')) {
 			return fail(400, {
 				error: 'El archivo BPMN proporcionado no es válido.',
 				values: { nameCreate: validatedName }
@@ -183,7 +181,7 @@ export const actions: Actions = {
 			}
 
 			created = await res.json();
-			console.log(created)
+			console.log(created);
 		} catch (err) {
 			console.error('Error de red al importar:', err);
 			return fail(500, {
@@ -193,8 +191,6 @@ export const actions: Actions = {
 		}
 		throw redirect(303, `/bpmn/${created.data.id}`);
 	},
-
-	
 
 	delete: async ({ request, cookies }) => {
 		const token = cookies.get('token');
