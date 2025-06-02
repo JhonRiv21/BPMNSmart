@@ -11,6 +11,7 @@
 	import { timeSince } from '$lib/utils/utils';
 	import { setupKeyboardShortcuts } from '$lib/functions/keyboardShortcuts';
 	import { exportBpmnDiagram } from '$lib/functions/exportDiagram';
+	import { generatePngScreenshot } from '$lib/functions/screenshotHandler';
 
 	const currentIdDiagram = page.url.pathname.replace('/bpmn/', '');
 	let modeler: BpmnModeler | null = null;
@@ -27,31 +28,9 @@
     await exportBpmnDiagram(modeler, diagramName);
   }, 500);
 
-	async function handleScreenshot(): Promise<string> {
-		if (!modeler) return '';
-		const svg = await modeler.saveSVG();
-		const svgBlob = new Blob([svg.svg], { type: 'image/svg+xml;charset=utf-8' });
-
-		return await new Promise<string>((resolve) => {
-			const reader = new FileReader();
-			reader.onloadend = () => {
-				const svgDataUrl = reader.result as string;
-				const image = new Image();
-				image.onload = () => {
-					const canvasElement = document.createElement('canvas');
-					canvasElement.width = image.width;
-					canvasElement.height = image.height;
-					const ctx = canvasElement.getContext('2d');
-					if (!ctx) return resolve('');
-					ctx.drawImage(image, 0, 0);
-					const pngDataUrl = canvasElement.toDataURL('image/png');
-					resolve(pngDataUrl);
-				};
-				image.src = svgDataUrl;
-			};
-			reader.readAsDataURL(svgBlob);
-		});
-	}
+	const takeScreenshot = async (): Promise<string> => {
+    return await generatePngScreenshot(modeler);
+  };
 
 	const handleAutoSave = debounce(async () => {
 		if (!modeler || isLoading) return;
@@ -59,12 +38,12 @@
 		try {
 			const { xml } = await modeler.saveXML({ format: true });
 			const nameToSend = diagramName.trim() === '' ? initialDiagramName : diagramName.trim();
-			const takeScreenShot = await handleScreenshot();
+			const screenshot = await takeScreenshot();
 
 			await updatedDiagram(currentIdDiagram, {
 				name: nameToSend,
 				bpmnXml: xml || '',
-				screenShot: takeScreenShot || ''
+				screenShot: screenshot || ''
 			});
 		} catch (err) {
 			console.error('Error en autoguardado:', err);
@@ -85,12 +64,12 @@
 			return;
 		}
 
-		const takeScreenShot = await handleScreenshot();
+		const screenshot = await takeScreenshot();
 
 		await updatedDiagramWithHistorical(currentIdDiagram, {
 			name: nameToSend,
 			bpmnXml: xml || '',
-			screenShot: takeScreenShot || ''
+			screenShot: screenshot || ''
 		});
 		
 		toast.success('Diagrama actualizado correctamente');
@@ -167,6 +146,7 @@
 		} finally {
 			isLoading = false;
 		}
+		
 		if (modeler) {
 			setTimeout(() => {
 				const poweredBy = document.querySelector('.bjs-powered-by') as HTMLElement | null;
