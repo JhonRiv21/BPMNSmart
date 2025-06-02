@@ -8,11 +8,19 @@ import authRouter from './routes/auth.route.ts'
 import cookieParser from 'cookie-parser';
 
 const app = express();
-const port = process.env.port || 4000;
+const port = process.env.PORT || 4000;
 
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
+
+app.use(cors({
+  origin: [
+    'http://localhost:5173',
+    'https://bpmn-smart.vercel.app'
+  ],
+  credentials: true
+}));
 
 app.use(
   session({
@@ -23,7 +31,6 @@ app.use(
 );
 
 app.use(passport.initialize());
-app.use(passport.session());
 
 app.use('/auth', authRouter);
 app.use('/api/users', userRoutes);
