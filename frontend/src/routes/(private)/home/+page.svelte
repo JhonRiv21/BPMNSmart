@@ -222,20 +222,34 @@
         {/if}
       </div>
 
-      <div class="mt-5 space-y-2">
-        <label for="bpmnFileImportInput">Archivo XML/BPMN</label> <input
-          id="bpmnFileImportInput" type="file"
-          name="bpmnFile" accept=".xml,.bpmn"
-          onchange={handleFile}
-          class="block w-full text-sm text-gray-500 file:mr-4 file:rounded-md file:border-0 file:bg-blue-600 file:px-4 file:py-2 file:text-white"
-        />
-        {#if importFileName && !importFileError}
-            <p class="text-sm text-gray-600 mt-1">Archivo: <span class="font-medium">{importFileName}</span></p>
-        {/if}
-        {#if importFileError}
-          <p class="text-sm text-red-500 mt-1">{importFileError}</p>
-        {/if}
-      </div>
+      <div class="mt-6 space-y-2">
+				<label for="bpmnFileImportInput" class="block text-sm font-medium text-gray-700">
+					Archivo XML/BPMN
+				</label>
+
+				<input
+					id="bpmnFileImportInput"
+					type="file"
+					name="bpmnFile"
+					accept=".xml,.bpmn"
+					onchange={handleFile}
+					class="block w-full text-sm text-gray-600
+								file:mr-4 file:rounded-md file:border-0
+								file:bg-blue-600 file:hover:bg-blue-700
+								file:px-4 file:py-2 file:text-white
+								file:cursor-pointer transition-colors duration-200"
+				/>
+
+				{#if importFileName && !importFileError}
+					<p class="block sm:hidden text-sm text-green-600 mt-1">
+						Archivo: <span class="font-semibold">{importFileName}</span>
+					</p>
+				{/if}
+
+				{#if importFileError}
+					<p class="text-sm text-red-500 mt-1">{importFileError}</p>
+				{/if}
+			</div>
 
       <input type="hidden" name="bpmnXml" value={bpmnXmlToImport} />
     </Modal>

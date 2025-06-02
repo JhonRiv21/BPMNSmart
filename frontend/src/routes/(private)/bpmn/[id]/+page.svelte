@@ -171,7 +171,7 @@
 				<div class="my-2 space-y-2">
 					{#if otherOptions}
 						<div class="flex flex-col bg-slate-100 p-2 rounded-md">
-							<label for="diagramName">Nombre del diagrama</label>
+							<label for="diagramName" class="bg">Nombre del diagrama</label>
 							<input
 							 	id="diagramName"
 								bind:value={diagramName}
@@ -179,7 +179,7 @@
 									const input = e.currentTarget as HTMLInputElement;
 									diagramName = sanitizeString(input.value);
 								}}
-							  class="border py-2 px-2 rounded-md" />
+							  class="border bg-white/60 py-1.5 px-2 rounded-md" />
 						</div>
 						<button
 							onclick={exportDiagram}

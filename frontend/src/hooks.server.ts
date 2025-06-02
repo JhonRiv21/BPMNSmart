@@ -25,8 +25,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 		} catch {
 			event.locals.user = undefined;
 			event.locals.token = undefined;
-			// Borrar cookie inválida para evitar reintentos
-			// event.cookies.delete('token', { path: '/' });
 		}
 	} else {
 		event.locals.user = undefined;
