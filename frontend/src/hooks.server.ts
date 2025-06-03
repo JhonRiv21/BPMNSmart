@@ -6,6 +6,7 @@ import { JWT_SECRET } from '$env/static/private';
 const PUBLIC_ROUTES = ['/', '/demo'];
 
 export const handle: Handle = async ({ event, resolve }) => {
+	console.log('Token cookie:', event.cookies.get('token'));
 	const path = event.url.pathname;
 
 	if (path.startsWith('/.well-known/appspecific/com.chrome.devtools.json')) {
