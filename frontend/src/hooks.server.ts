@@ -6,6 +6,7 @@ import { JWT_SECRET } from '$env/static/private';
 const PUBLIC_ROUTES = ['/', '/demo'];
 
 export const handle: Handle = async ({ event, resolve }) => {
+	console.log('All cookies:', event.cookies);
 	const token = event.cookies.get('token');
 	console.log('Token cookie:', event.cookies.get('token'));
 	const path = event.url.pathname;
