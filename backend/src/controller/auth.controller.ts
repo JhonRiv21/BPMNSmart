@@ -29,7 +29,7 @@ export async function googleCallback(req: Request, res: Response, next: NextFunc
     //   domain: process.env.NODE_ENV === 'production' ? undefined : 'localhost'
     // });
 
-    return res.redirect(`${process.env.FRONTEND_URL}`);  
+    return res.redirect(`${process.env.FRONTEND_URL}?token=${token}`);  
   } catch (err) {
     console.error('Error en googleCallback:', err);
     return res.redirect(`${process.env.FRONTEND_URL}?error=callback_error`);
