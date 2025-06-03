@@ -17,6 +17,7 @@ export async function googleCallback(req: Request, res: Response, next: NextFunc
       sameSite: 'none',
       path: '/',
       maxAge: 1000 * 60 * 60 * 2,
+      domain: '.bpmnsmart-production.up.railway.app'
     });
 
     // res.cookie('token', token, {
