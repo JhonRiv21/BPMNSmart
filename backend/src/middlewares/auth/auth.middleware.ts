@@ -11,7 +11,11 @@ export interface AuthenticatedRequest extends Request {
   user?: UserPayload;
 }
 
-export function verifyToken(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+export function verifyToken(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+) {
   let token: string | undefined = req.cookies.token;
 
   if (!token) {
@@ -22,7 +26,9 @@ export function verifyToken(req: AuthenticatedRequest, res: Response, next: Next
   }
 
   if (!token) {
-    return res.status(401).json({ error: 'Acceso denegado: No se proporcionó token.' });
+    return res
+      .status(401)
+      .json({ error: 'Acceso denegado: No se proporcionó token.' });
   }
 
   try {
@@ -31,13 +37,17 @@ export function verifyToken(req: AuthenticatedRequest, res: Response, next: Next
     next();
   } catch (err: any) {
     if (err.name === 'TokenExpiredError') {
-        return res.status(401).json({ error: 'Token expirado.' });
+      return res.status(401).json({ error: 'Token expirado.' });
     }
     return res.status(403).json({ error: 'Token inválido.' });
   }
 }
 
-export async function refreshTokenIfNeeded(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+export async function refreshTokenIfNeeded(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+) {
   const token = req.cookies.token;
   if (!token) return next();
 

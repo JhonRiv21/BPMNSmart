@@ -58,18 +58,18 @@
 
 <button class="fixed right-2 bottom-2 flex flex-col items-center" onclick={openModal}>
 	<div
-		class="max-w-12 sm:max-w-18 cursor-pointer rounded-full border border-blue-500 bg-blue-100 p-2.5 transition duration-500 hover:bg-blue-200"
+		class="max-w-12 cursor-pointer rounded-full border border-blue-500 bg-blue-100 p-2.5 transition duration-500 hover:bg-blue-200 sm:max-w-18"
 	>
 		<img src={support} alt="Soporte" />
 	</div>
-	<p class="pt-1 text-[8px] sm:text-xs text-blue font-medium">¿Necesitas soporte?</p>
+	<p class="text-blue pt-1 text-[8px] font-medium sm:text-xs">¿Necesitas soporte?</p>
 </button>
 
 {#if isOpen}
 	<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
 		<div
 			transition:fly={{ y: 20, duration: 300, easing: quintOut }}
-			class="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-lg m-4"
+			class="relative m-4 w-full max-w-md rounded-2xl bg-white p-6 shadow-lg"
 		>
 			<button
 				class="absolute top-4 right-5 cursor-pointer text-4xl text-gray-500 hover:text-red-500"

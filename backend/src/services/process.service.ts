@@ -38,14 +38,13 @@ export const createProcessForUser = async (
     screenShot?: string;
   }
 ) => {
-
   const existing = await prisma.process.findFirst({
     where: {
       createdFor: userId,
-      name: data.name
-    }
-  })
-  
+      name: data.name,
+    },
+  });
+
   if (existing) {
     throw new DuplicateProcessNameError();
   }
@@ -132,7 +131,7 @@ export const getProcessHistory = async (parentId: string, userId: string) => {
   return prisma.historical.findMany({
     where: {
       parentId,
-      createdFor: userId
+      createdFor: userId,
     },
     orderBy: { createdAt: 'asc' },
   });

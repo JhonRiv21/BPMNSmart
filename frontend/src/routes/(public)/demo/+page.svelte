@@ -47,5 +47,8 @@
 	id="js-drop-zone"
 	bind:this={container}
 >
-	<div class="relative h-full w-full min-h-[80vh] sm:min-h-full min-w-[150vw] sm:min-w-full" id="js-canvas"></div>
+	<div
+		class="relative h-full min-h-[80vh] w-full min-w-[150vw] sm:min-h-full sm:min-w-full"
+		id="js-canvas"
+	></div>
 </div>

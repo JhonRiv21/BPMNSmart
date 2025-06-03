@@ -4,7 +4,7 @@ import passport from './auth/passport.ts';
 import cors from 'cors';
 import userRoutes from './routes/user.route.ts';
 import processRoutes from './routes/process.route.ts';
-import authRouter from './routes/auth.route.ts'
+import authRouter from './routes/auth.route.ts';
 import cookieParser from 'cookie-parser';
 
 const app = express();
@@ -27,23 +27,25 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 app.use(cookieParser());
 
-app.use(cors({
-  origin: [
-    'http://localhost:5173',
-    'https://bpmn-smart.vercel.app',
-    'https://bpmnsmart-production.up.railway.app'
-  ],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: [
-    'Content-Type', 
-    'Authorization', 
-    'Cookie',
-    'Set-Cookie',
-    'Access-Control-Allow-Credentials'
-  ],
-  exposedHeaders: ['Set-Cookie']
-}));
+app.use(
+  cors({
+    origin: [
+      'http://localhost:5173',
+      'https://bpmn-smart.vercel.app',
+      'https://bpmnsmart-production.up.railway.app',
+    ],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'Cookie',
+      'Set-Cookie',
+      'Access-Control-Allow-Credentials',
+    ],
+    exposedHeaders: ['Set-Cookie'],
+  })
+);
 
 app.use(
   session({
@@ -55,8 +57,8 @@ app.use(
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
       sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-      domain: process.env.NODE_ENV === 'production' ? undefined : 'localhost'
-    }
+      domain: process.env.NODE_ENV === 'production' ? undefined : 'localhost',
+    },
   })
 );
 
@@ -71,17 +73,24 @@ app.use((_req, res) => {
   res.status(404).json({ error: 'No encontrado' });
 });
 
-app.use((err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
-  console.error(err);
-  res.status(500).json({ error: 'Error interno del servidor' });
-});
+app.use(
+  (
+    err: any,
+    _req: express.Request,
+    res: express.Response,
+    _next: express.NextFunction
+  ) => {
+    console.error(err);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+);
 
 app.listen(port, () => {
   const isProduction = process.env.NODE_ENV === 'production';
-  const serverUrl = isProduction 
-    ? `https://bpmnsmart-production.up.railway.app` 
+  const serverUrl = isProduction
+    ? `https://bpmnsmart-production.up.railway.app`
     : `http://localhost:${port}`;
-  
+
   console.log(`Servidor corriendo en ${serverUrl}`);
   console.log(`Puerto: ${port}`);
   console.log(`Entorno: ${process.env.NODE_ENV || 'development'}`);

@@ -60,8 +60,8 @@ export const createProcess = async (
   try {
     const created = await processService.createProcessForUser(userId, {
       name,
-      bpmnXml, 
-      screenShot
+      bpmnXml,
+      screenShot,
     });
     res.status(201).json({
       message: 'Proceso creado correctamente',
@@ -69,7 +69,9 @@ export const createProcess = async (
     });
   } catch (e) {
     if (e instanceof DuplicateProcessNameError) {
-      return res.status(400).json({ error: 'Ya tienes un proceso con ese nombre.' });
+      return res
+        .status(400)
+        .json({ error: 'Ya tienes un proceso con ese nombre.' });
     }
     res.status(500).json({ error: 'Error al crear el proceso' });
   }
@@ -127,11 +129,15 @@ export const updateProcessWithHistorical = async (
   }
 
   try {
-    const updated = await processService.updateProcessForUserWithHistorical(id, userId, {
-      name,
-      bpmnXml,
-      screenShot,
-    });
+    const updated = await processService.updateProcessForUserWithHistorical(
+      id,
+      userId,
+      {
+        name,
+        bpmnXml,
+        screenShot,
+      }
+    );
 
     if (!updated)
       return res
@@ -164,7 +170,6 @@ export const getProcessHistory = async (
     res.status(500).json({ error: 'Error al obtener historial del proceso' });
   }
 };
-
 
 // Delete user process by id
 export const deleteProcess = async (

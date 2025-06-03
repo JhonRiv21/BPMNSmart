@@ -1,5 +1,5 @@
-import { PrismaClient, User } from "@prisma/client";
-import jwt from 'jsonwebtoken'
+import { PrismaClient, User } from '@prisma/client';
+import jwt from 'jsonwebtoken';
 
 const prisma = new PrismaClient();
 
@@ -9,9 +9,9 @@ export async function findOrCreateUserByGoogle(profile: {
   lastNames: string;
 }): Promise<User> {
   const { email, firstName, lastNames } = profile;
-  
+
   let user = await prisma.user.findUnique({
-    where: { email }
+    where: { email },
   });
 
   if (!user) {
@@ -20,7 +20,7 @@ export async function findOrCreateUserByGoogle(profile: {
         email,
         name: firstName,
         lastNames,
-      }
+      },
     });
   }
 
@@ -38,7 +38,7 @@ export function generateJwtToken(user: User): string {
 
 export async function findUserById(id: string): Promise<User | null> {
   const user = await prisma.user.findUnique({
-    where: { id }
+    where: { id },
   });
   return user;
 }

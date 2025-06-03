@@ -9,15 +9,15 @@ export const handle: Handle = async ({ event, resolve }) => {
 	const queryToken = event.url.searchParams.get('token');
 
 	if (queryToken) {
-    event.cookies.set('token', queryToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'none',
-      path: '/',
-      maxAge: 1000 * 60 * 60 * 2,
-    });
-    event.url.searchParams.delete('token');
-  }
+		event.cookies.set('token', queryToken, {
+			httpOnly: true,
+			secure: true,
+			sameSite: 'none',
+			path: '/',
+			maxAge: 1000 * 60 * 60 * 2
+		});
+		event.url.searchParams.delete('token');
+	}
 
 	const token = event.cookies.get('token');
 	const path = event.url.pathname;

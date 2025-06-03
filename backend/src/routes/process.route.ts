@@ -1,5 +1,8 @@
 import { Router, RequestHandler } from 'express';
-import { refreshTokenIfNeeded, verifyToken } from '../middlewares/auth/auth.middleware.ts';
+import {
+  refreshTokenIfNeeded,
+  verifyToken,
+} from '../middlewares/auth/auth.middleware.ts';
 import * as processController from '../controller/process.controller.ts';
 const router = Router();
 

@@ -13,7 +13,7 @@ router.get(
   '/google/callback',
   passport.authenticate('google', {
     failureRedirect: `${process.env.FRONTEND_URL}?error=auth_failed`,
-    session: false 
+    session: false,
   }),
   googleCallback
 );
