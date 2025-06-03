@@ -43,9 +43,9 @@
 </script>
 
 <div
-	class="fixed top-24 left-0 h-full w-full border border-gray-300 bg-white"
+	class="fixed top-24 left-0 h-full w-full overflow-x-auto border border-gray-300 bg-white"
 	id="js-drop-zone"
 	bind:this={container}
 >
-	<div class="h-full w-full" id="js-canvas"></div>
+	<div class="relative h-full w-full min-h-[80vh] sm:min-h-full min-w-[150vw] sm:min-w-full" id="js-canvas"></div>
 </div>

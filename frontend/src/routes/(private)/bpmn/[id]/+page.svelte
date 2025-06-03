@@ -167,8 +167,8 @@
 	});
 </script>
 
-<div class="fixed top-24 left-0 h-full w-full border border-gray-300 bg-white" id="js-drop-zone">
-	<div class="relative h-full w-full" id="js-canvas" bind:this={canvasContainerElement}>
+<div class="fixed top-24 left-0 h-full w-full overflow-x-auto border border-gray-300 bg-white" id="js-drop-zone">
+	<div class="relative h-full w-full min-h-[80vh] sm:min-h-full min-w-[150vw] sm:min-w-full" id="js-canvas" bind:this={canvasContainerElement}>
 		<div class="fixed right-2 bottom-2 z-30 space-y-2">
 			<div>
 				<div class="my-2 space-y-2">

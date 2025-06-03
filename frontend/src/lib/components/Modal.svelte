@@ -30,7 +30,7 @@
 	<div class="fixed inset-0 bg-gray-500/75 transition-opacity" aria-hidden="true"></div>
 	<div class="fixed inset-0 z-10 w-screen overflow-y-auto">
 		<div
-			class="mr-3 flex min-h-full items-end justify-center p-4 text-center sm:mr-0 sm:items-center sm:p-0"
+			class="mr-3 flex translate-y-1/3 sm:translate-y-0 sm:min-h-full items-end justify-center p-4 text-center sm:mr-0 sm:items-center sm:p-0"
 		>
 			<div
 				transition:fly={{ y: 20, duration: 300, easing: quintOut }}
