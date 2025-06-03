@@ -17,8 +17,16 @@ export async function googleCallback(req: Request, res: Response, next: NextFunc
       secure: true,
       maxAge: 1000 * 60 * 60 * 2,
       path: '/',
-      domain: process.env.NODE_ENV === 'production' ? undefined : 'localhost'
     });
+
+    // res.cookie('token', token, {
+    //   httpOnly: true,
+    //   sameSite: 'none',
+    //   secure: true,
+    //   maxAge: 1000 * 60 * 60 * 2,
+    //   path: '/',
+    //   domain: process.env.NODE_ENV === 'production' ? undefined : 'localhost'
+    // });
 
     // Debug logs
     console.log('=== CALLBACK SUCCESS ===');
@@ -31,7 +39,7 @@ export async function googleCallback(req: Request, res: Response, next: NextFunc
       httpOnly: true
     });
 
-    return res.redirect(`${process.env.FRONTEND_URL}?auth=success`);
+    return res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5173'}`);
   } catch (err) {
     console.error('Error en googleCallback:', err);
     return res.redirect(`${process.env.FRONTEND_URL}?error=callback_error`);
