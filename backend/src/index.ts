@@ -10,7 +10,17 @@ import cookieParser from 'cookie-parser';
 const app = express();
 const port = process.env.PORT || 4000;
 
-app.set('trust proxy', 1);
+app.set('trust proxy', true);
+
+if (process.env.NODE_ENV === 'production') {
+  app.use((req, res, next) => {
+    if (req.header('x-forwarded-proto') !== 'https') {
+      res.redirect(`https://${req.header('host')}${req.url}`);
+      return;
+    }
+    next();
+  });
+}
 
 console.log('=== CONFIGURACIÓN RAILWAY ===');
 console.log('NODE_ENV:', process.env.NODE_ENV);
@@ -37,7 +47,12 @@ app.use(
   session({
     secret: process.env.SESSION_SECRET || 'default_session_secret',
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === 'production',
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000
+    }
   })
 );
 
@@ -47,12 +62,30 @@ app.use('/auth', authRouter);
 app.use('/api/users', userRoutes);
 app.use('/api/process', processRoutes);
 
-app.get('/health', (_req, res) => {
+app.get('/health', (req, res) => {
   res.json({ 
-    status: 'ok', 
+    status: 'ok',
     timestamp: new Date().toISOString(),
     env: process.env.NODE_ENV,
-    apiUrl: process.env.PUBLIC_API_URL
+    port: process.env.PORT,
+    apiUrl: process.env.PUBLIC_API_URL,
+    frontendUrl: process.env.FRONTEND_URL,
+    oauthClientId: process.env.OAUTH_CLIENT_ID,
+    hasApiUrl: !!process.env.PUBLIC_API_URL,
+    hasFrontendUrl: !!process.env.FRONTEND_URL,
+    hasOauthClientId: !!process.env.OAUTH_CLIENT_ID,
+    hasOauthSecret: !!process.env.OAUTH_SECRET_CLIENT,
+    callbackUrl: `${process.env.PUBLIC_API_URL}/auth/google/callback`,
+    requestInfo: {
+      protocol: req.protocol,
+      host: req.get('host'),
+      originalUrl: req.originalUrl,
+      headers: {
+        'x-forwarded-proto': req.get('x-forwarded-proto'),
+        'x-forwarded-host': req.get('x-forwarded-host'),
+        'host': req.get('host')
+      }
+    }
   });
 });
 
