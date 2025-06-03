@@ -13,10 +13,10 @@ export async function googleCallback(req: Request, res: Response, next: NextFunc
     
     res.cookie('token', token, {
       httpOnly: true,
-      sameSite: 'none',
       secure: true,
-      maxAge: 1000 * 60 * 60 * 2,
+      sameSite: 'none',
       path: '/',
+      maxAge: 1000 * 60 * 60 * 2,
     });
 
     // res.cookie('token', token, {
@@ -28,18 +28,7 @@ export async function googleCallback(req: Request, res: Response, next: NextFunc
     //   domain: process.env.NODE_ENV === 'production' ? undefined : 'localhost'
     // });
 
-    // Debug logs
-    console.log('=== CALLBACK SUCCESS ===');
-    console.log('User:', user.id);
-    console.log('Token generated:', !!token);
-    console.log('Redirecting to:', process.env.FRONTEND_URL);
-    console.log('Cookie config:', {
-      sameSite: 'none',
-      secure: true,
-      httpOnly: true
-    });
-
-    return res.redirect(`${process.env.FRONTEND_URL}?token=${token}`);  
+    return res.redirect(`${process.env.FRONTEND_URL}`);  
   } catch (err) {
     console.error('Error en googleCallback:', err);
     return res.redirect(`${process.env.FRONTEND_URL}?error=callback_error`);

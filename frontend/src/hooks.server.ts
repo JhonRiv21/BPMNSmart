@@ -6,28 +6,13 @@ import { JWT_SECRET } from '$env/static/private';
 const PUBLIC_ROUTES = ['/', '/demo'];
 
 export const handle: Handle = async ({ event, resolve }) => {
-	const queryToken = event.url.searchParams.get('token');
-
-	if (queryToken) {
-    event.cookies.set('token', queryToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'none',
-      path: '/',
-      maxAge: 1000 * 60 * 60 * 2,
-      // domain: '.vercel.app'
-    });
-    event.url.searchParams.delete('token');
-  }
-
+	const token = event.cookies.get('token');
+	console.log('Token cookie:', event.cookies.get('token'));
 	const path = event.url.pathname;
 
 	if (path.startsWith('/.well-known/appspecific/com.chrome.devtools.json')) {
 		return new Response('{}', { status: 200, headers: { 'content-type': 'application/json' } });
 	}
-
-	const token = event.cookies.get('token');
-	console.log('Token cookie:', event.cookies.get('token'));
 
 	if (token) {
 		try {
