@@ -1,43 +1,41 @@
 import passport from "passport";
 import { Strategy as GoogleStrategy, Profile } from "passport-google-oauth20";
-import { findOrCreateUserByGoogle } from "../services/auth.service.ts";
+import { findOrCreateUserByGoogle, findUserById } from "../services/auth.service.ts";
 
-const callbackURL = `${process.env.PUBLIC_API_URL}/auth/google/callback`;
+passport.serializeUser(async (user: any, done) => {
+  done(null, user.id);
+});
 
-console.log('=== DEBUG OAUTH SETUP ===');
-console.log('CLIENT_ID:', process.env.OAUTH_CLIENT_ID);
-console.log('CALLBACK_URL:', callbackURL);
-console.log('PUBLIC_API_URL:', process.env.PUBLIC_API_URL);
-console.log('=== END DEBUG ===');
+passport.deserializeUser(async (id: string, done) => {
+  try {
+    const user = await findUserById(id);
+    done(null, user);
+  } catch (err) {
+    done(err, null);
+  }
+});
 
 passport.use(
   new GoogleStrategy(
     {
       clientID: process.env.OAUTH_CLIENT_ID!,
       clientSecret: process.env.OAUTH_SECRET_CLIENT!,
-      callbackURL: callbackURL
+      callbackURL: `${process.env.PUBLIC_API_URL}/auth/google/callback`
     },
     async (_accessToken: string, _refreshToken: string, profile: Profile, done) => {
       try {
-        console.log('=== OAUTH CALLBACK EJECUTADO ===');
-        console.log('Profile ID:', profile.id);
-        console.log('Profile emails:', profile.emails);
-        
         const email = profile.emails?.[0]?.value;
         const firstName = profile.name?.givenName || '';
         const lastNames = profile.name?.familyName || '';
 
         if (!email) {
-          console.error('ERROR: No se obtuvo email de Google');
-          return done(new Error('No se obtuvo email de Google'), false);
+          return done(null, false, { message: 'No se obtuvo email de Google' });
         }
 
         const user = await findOrCreateUserByGoogle({ email, firstName, lastNames });
-        console.log('Usuario creado/encontrado:', user.id);
         return done(null, user);
       } catch (err: any) {
-        console.error('Error en Google Strategy:', err);
-        return done(err, false);
+        return done(err, undefined);
       }
     }
   )
