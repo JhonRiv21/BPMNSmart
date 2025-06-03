@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import BpmnModeler from 'bpmn-js/lib/Modeler';
-	import defaultDiagram from '$lib/resources/defaultDiagram.bpmn?raw';
+	import defaultDiagram from '$lib/resources/demoDiagram.bpmn?raw';
 	import type CommandStack from 'diagram-js/lib/command/CommandStack';
 
 	let modeler: BpmnModeler | null = null;

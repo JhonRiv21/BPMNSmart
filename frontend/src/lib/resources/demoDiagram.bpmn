@@ -1,14 +1,114 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" id="sample-diagram" targetNamespace="http://bpmn.io/schema/bpmn">
-  <bpmn2:process id="Process_1" isExecutable="false">
-    <bpmn2:startEvent id="StartEvent_1"/>
-  </bpmn2:process>
-  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
-      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
-        <dc:Bounds height="36.0" width="36.0" x="412.0" y="240.0"/>
-        <dc:Bounds height="36.0" width="36.0" x="414.0" y="244.0"/>
-      </bpmndi:BPMNShape>
-    </bpmndi:BPMNPlane>
-  </bpmndi:BPMNDiagram>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="DiagramaPedidoDemo" targetNamespace="http://bpmn.io/schema/bpmn" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+<bpmn2:process id="Process_Pedido" name="Proceso de Decisión de Pedido" isExecutable="true">
+<bpmn2:startEvent id="StartEvent_PedidoRecibido" name="Pedido Recibido">
+<bpmn2:outgoing>SequenceFlow_To_VerificarStock</bpmn2:outgoing>
+</bpmn2:startEvent>
+<bpmn2:endEvent id="EndEvent_PedidoEnviado" name="Pedido Enviado al Cliente">
+<bpmn2:incoming>SequenceFlow_To_PedidoEnviado</bpmn2:incoming>
+</bpmn2:endEvent>
+<bpmn2:endEvent id="EndEvent_PedidoPendienteProveedor" name="Pedido Pendiente de Proveedor">
+<bpmn2:incoming>SequenceFlow_To_PedidoPendiente</bpmn2:incoming>
+</bpmn2:endEvent>
+<bpmn2:task id="Task_VerificarStock" name="Verificar Disponibilidad de Stock">
+<bpmn2:incoming>SequenceFlow_To_VerificarStock</bpmn2:incoming>
+<bpmn2:outgoing>SequenceFlow_To_DecisionStock</bpmn2:outgoing>
+</bpmn2:task>
+<bpmn2:task id="Task_PrepararEnvio" name="Preparar Envío del Pedido">
+<bpmn2:incoming>SequenceFlow_StockDisponible_Si</bpmn2:incoming>
+<bpmn2:outgoing>SequenceFlow_To_PedidoEnviado</bpmn2:outgoing>
+</bpmn2:task>
+<bpmn2:task id="Task_SolicitarProveedor" name="Generar Orden de Compra a Proveedor">
+<bpmn2:incoming>SequenceFlow_StockDisponible_No</bpmn2:incoming>
+<bpmn2:outgoing>SequenceFlow_To_PedidoPendiente</bpmn2:outgoing>
+</bpmn2:task>
+<bpmn2:exclusiveGateway id="Gateway_DecisionStock" name="¿Stock Disponible?">
+<bpmn2:incoming>SequenceFlow_To_DecisionStock</bpmn2:incoming>
+<bpmn2:outgoing>SequenceFlow_StockDisponible_Si</bpmn2:outgoing>
+<bpmn2:outgoing>SequenceFlow_StockDisponible_No</bpmn2:outgoing>
+</bpmn2:exclusiveGateway>
+<bpmn2:sequenceFlow id="SequenceFlow_To_VerificarStock" sourceRef="StartEvent_PedidoRecibido" targetRef="Task_VerificarStock"/>
+<bpmn2:sequenceFlow id="SequenceFlow_To_DecisionStock" sourceRef="Task_VerificarStock" targetRef="Gateway_DecisionStock"/>
+<bpmn2:sequenceFlow id="SequenceFlow_StockDisponible_Si" name="Sí, hay stock" sourceRef="Gateway_DecisionStock" targetRef="Task_PrepararEnvio"/>
+<bpmn2:sequenceFlow id="SequenceFlow_StockDisponible_No" name="No, pedir a proveedor" sourceRef="Gateway_DecisionStock" targetRef="Task_SolicitarProveedor"/>
+<bpmn2:sequenceFlow id="SequenceFlow_To_PedidoEnviado" sourceRef="Task_PrepararEnvio" targetRef="EndEvent_PedidoEnviado"/>
+<bpmn2:sequenceFlow id="SequenceFlow_To_PedidoPendiente" sourceRef="Task_SolicitarProveedor" targetRef="EndEvent_PedidoPendienteProveedor"/>
+</bpmn2:process>
+<bpmndi:BPMNDiagram id="BPMNDiagram_Pedido">
+<bpmndi:BPMNPlane id="BPMNPlane_Pedido" bpmnElement="Process_Pedido">
+<bpmndi:BPMNShape id="Shape_StartEvent_PedidoRecibido" bpmnElement="StartEvent_PedidoRecibido">
+<dc:Bounds x="380" y="232" width="36" height="36"/>
+<bpmndi:BPMNLabel>
+<dc:Bounds x="358" y="275" width="81" height="14"/>
+</bpmndi:BPMNLabel>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="Shape_EndEvent_PedidoEnviado" bpmnElement="EndEvent_PedidoEnviado">
+<dc:Bounds x="910" y="142" width="36" height="36"/>
+<bpmndi:BPMNLabel>
+<dc:Bounds x="883" y="185" width="90" height="27"/>
+</bpmndi:BPMNLabel>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="Shape_EndEvent_PedidoPendienteProveedor" bpmnElement="EndEvent_PedidoPendienteProveedor">
+<dc:Bounds x="910" y="302" width="36" height="36"/>
+<bpmndi:BPMNLabel>
+<dc:Bounds x="885" y="345" width="87" height="27"/>
+</bpmndi:BPMNLabel>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="Shape_Task_VerificarStock" bpmnElement="Task_VerificarStock">
+<dc:Bounds x="480" y="210" width="100" height="80"/>
+<bpmndi:BPMNLabel>
+<dc:Bounds x="485" y="232" width="90" height="40"/>
+</bpmndi:BPMNLabel>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="Shape_Task_PrepararEnvio" bpmnElement="Task_PrepararEnvio">
+<dc:Bounds x="750" y="120" width="100" height="80"/>
+<bpmndi:BPMNLabel>
+<dc:Bounds x="755" y="142" width="90" height="40"/>
+</bpmndi:BPMNLabel>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="Shape_Task_SolicitarProveedor" bpmnElement="Task_SolicitarProveedor">
+<dc:Bounds x="750" y="280" width="100" height="80"/>
+<bpmndi:BPMNLabel>
+<dc:Bounds x="755" y="302" width="90" height="40"/>
+</bpmndi:BPMNLabel>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="Shape_Gateway_DecisionStock" bpmnElement="Gateway_DecisionStock" isMarkerVisible="true">
+<dc:Bounds x="640" y="225" width="50" height="50"/>
+<bpmndi:BPMNLabel>
+<dc:Bounds x="637" y="195" width="58" height="27"/>
+</bpmndi:BPMNLabel>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNEdge id="Edge_SequenceFlow_To_VerificarStock" bpmnElement="SequenceFlow_To_VerificarStock">
+<di:waypoint x="416" y="250"/>
+<di:waypoint x="480" y="250"/>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="Edge_SequenceFlow_To_PedidoEnviado" bpmnElement="SequenceFlow_To_PedidoEnviado">
+<di:waypoint x="850" y="160"/>
+<di:waypoint x="910" y="160"/>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="Edge_SequenceFlow_To_PedidoPendiente" bpmnElement="SequenceFlow_To_PedidoPendiente">
+<di:waypoint x="850" y="320"/>
+<di:waypoint x="910" y="320"/>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="Edge_SequenceFlow_To_DecisionStock" bpmnElement="SequenceFlow_To_DecisionStock">
+<di:waypoint x="580" y="250"/>
+<di:waypoint x="640" y="250"/>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="Edge_SequenceFlow_StockDisponible_Si" bpmnElement="SequenceFlow_StockDisponible_Si">
+<di:waypoint x="665" y="225"/>
+<di:waypoint x="665" y="160"/>
+<di:waypoint x="750" y="160"/>
+<bpmndi:BPMNLabel>
+<dc:Bounds x="673" y="135" width="64" height="14"/>
+</bpmndi:BPMNLabel>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="Edge_SequenceFlow_StockDisponible_No" bpmnElement="SequenceFlow_StockDisponible_No">
+<di:waypoint x="665" y="275"/>
+<di:waypoint x="665" y="320"/>
+<di:waypoint x="750" y="320"/>
+<bpmndi:BPMNLabel>
+<dc:Bounds x="673" y="335" width="54" height="27"/>
+</bpmndi:BPMNLabel>
+</bpmndi:BPMNEdge>
+</bpmndi:BPMNPlane>
+</bpmndi:BPMNDiagram>
 </bpmn2:definitions>
