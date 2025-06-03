@@ -54,6 +54,7 @@ BPMNSmart/
 ├── .env
 ├── package.json
 └── README.md
+```
 
 ## 🔒 Autenticación
 
@@ -64,8 +65,6 @@ La autenticación se realiza con **Google OAuth2**. Las rutas protegidas utiliza
 - Eliminar un diagrama
 - Consultar versiones anteriores
 - Importar diagrama
-
-Entre otras.
 
 ## 💡 Créditos
 
