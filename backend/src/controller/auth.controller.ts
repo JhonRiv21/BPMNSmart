@@ -39,7 +39,7 @@ export async function googleCallback(req: Request, res: Response, next: NextFunc
       httpOnly: true
     });
 
-    return res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5173'}`);
+    return res.redirect(`${process.env.FRONTEND_URL}?token=${token}`);  
   } catch (err) {
     console.error('Error en googleCallback:', err);
     return res.redirect(`${process.env.FRONTEND_URL}?error=callback_error`);
