@@ -6,23 +6,35 @@ export async function googleCallback(req: Request, res: Response, next: NextFunc
   try {
     const user = req.user as User;
     if (!user) {
-      return res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5173'}`);
+      return res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5173'}?error=no_user`);
     }
 
     const token = generateJwtToken(user);
     
     res.cookie('token', token, {
       httpOnly: true,
-      sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'none',
+      secure: true,
       maxAge: 1000 * 60 * 60 * 2,
       path: '/',
+      domain: process.env.NODE_ENV === 'production' ? undefined : 'localhost'
     });
 
-    return res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5173'}`);
+    // Debug logs
+    console.log('=== CALLBACK SUCCESS ===');
+    console.log('User:', user.id);
+    console.log('Token generated:', !!token);
+    console.log('Redirecting to:', process.env.FRONTEND_URL);
+    console.log('Cookie config:', {
+      sameSite: 'none',
+      secure: true,
+      httpOnly: true
+    });
+
+    return res.redirect(`${process.env.FRONTEND_URL}?auth=success`);
   } catch (err) {
     console.error('Error en googleCallback:', err);
-    return next(err);
+    return res.redirect(`${process.env.FRONTEND_URL}?error=callback_error`);
   }
 }
 

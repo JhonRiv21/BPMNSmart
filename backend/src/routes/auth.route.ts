@@ -33,4 +33,22 @@ router.get('/google/callback',
 
 router.post('/logout', logout);
 
+router.get('/debug', (req, res) => {
+  console.log('=== AUTH DEBUG ===');
+  console.log('Session ID:', req.sessionID);
+  console.log('Session:', req.session);
+  console.log('User:', req.user);
+  console.log('Authenticated:', req.isAuthenticated());
+  console.log('Cookies:', req.cookies);
+  console.log('Headers:', req.headers);
+  
+  res.json({
+    sessionId: req.sessionID,
+    user: req.user,
+    authenticated: req.isAuthenticated(),
+    cookies: req.cookies,
+    session: req.session
+  });
+});
+
 export default router;
