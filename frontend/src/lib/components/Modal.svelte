@@ -6,12 +6,13 @@
 	type Props = {
 		title: string;
 		text?: string;
-		onCancel: () => void;
+		onCancel?: () => void;
 		onAction?: () => void;
 		textAction: string;
 		children?: Snippet<[]>;
 		colorAction?: string;
 		submitButton?: boolean;
+		setOnCancel?: boolean;
 	};
 
 	const {
@@ -22,7 +23,8 @@
 		textAction,
 		children,
 		colorAction = 'blue',
-		submitButton = false
+		submitButton = false,
+		setOnCancel = true
 	}: Props = $props();
 </script>
 
@@ -85,12 +87,14 @@
 							{textAction}
 						</button>
 					{/if}
-					<button
-						onclick={onCancel}
-						type="button"
-						class="font- mt-3 inline-flex w-full cursor-pointer justify-center rounded-md bg-white px-5 py-2 text-gray-900 shadow-xs ring-1 ring-gray-300 transition duration-500 ring-inset hover:bg-gray-100 sm:mt-0 sm:w-auto"
-						>Cancelar</button
-					>
+					{#if setOnCancel}
+						<button
+							onclick={onCancel}
+							type="button"
+							class="font- mt-3 inline-flex w-full cursor-pointer justify-center rounded-md bg-white px-5 py-2 text-gray-900 shadow-xs ring-1 ring-gray-300 transition duration-500 ring-inset hover:bg-gray-100 sm:mt-0 sm:w-auto"
+							>Cancelar</button
+						>
+					{/if}
 				</div>
 			</div>
 		</div>

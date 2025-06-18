@@ -5,7 +5,7 @@
 	import Logout from '$lib/assets/icons/Logout.svelte';
 	import Modal from './Modal.svelte';
 	import GoogleButton from './GoogleButton.svelte';
-
+	
 	let openModalLogout = $state(false);
 </script>
 
