@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "outDir": "dist",
+    "forceConsistentCasingInFileNames": true,
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "Bundler",
