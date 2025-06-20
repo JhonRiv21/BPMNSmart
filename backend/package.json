@@ -9,7 +9,7 @@
     "start": "node dist/index.js",
     "build": "npm run prisma:generate && npm run esbuild",
     "prisma:generate": "prisma generate",
-    "esbuild": "npx esbuild src/index.ts --bundle --platform=node --outfile=dist/index.js --format=esm --external:@prisma/client",
+    "esbuild": "npx esbuild src/index.ts --bundle --platform=node --outfile=dist/index.js --format=esm --target=node18 --packages=external",
     "postinstall": "prisma generate",
     "format": "prettier --write ."
   },
