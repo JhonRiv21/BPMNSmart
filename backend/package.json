@@ -7,7 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon",
     "start": "node dist/index.js",
-    "build": "prisma generate && npx esbuild src/index.ts --bundle --platform=node --outfile=dist/index.js --format=esm",
+    "build": "npm run prisma:generate && npm run esbuild",
+    "prisma:generate": "prisma generate",
+    "esbuild": "npx esbuild src/index.ts --bundle --platform=node --outfile=dist/index.js --format=esm --external:@prisma/client",
+    "postinstall": "prisma generate",
     "format": "prettier --write ."
   },
   "keywords": [],
