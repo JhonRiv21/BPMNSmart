@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon",
     "start": "node dist/index.js",
-    "build": "tsc",
+    "build": "prisma generate && esbuild src/index.ts --bundle --platform=node --outfile=dist/index.js --format=esm",
     "format": "prettier --write ."
   },
   "keywords": [],
@@ -25,6 +25,7 @@
     "@types/passport": "^1.0.17",
     "@types/passport-google-oauth20": "^2.0.16",
     "concurrently": "^7.0.0",
+    "esbuild": "^0.25.5",
     "prisma": "^6.7.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"

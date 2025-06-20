@@ -1,10 +1,8 @@
 {
   "compilerOptions": {
-    "outDir": "dist",
-    "forceConsistentCasingInFileNames": true,
     "target": "ESNext",
     "module": "ESNext",
-    "moduleResolution": "node",
+    "moduleResolution": "Bundler",
     "moduleDetection": "force",
     "esModuleInterop": true,
     "strict": true,
