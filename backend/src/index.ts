@@ -32,7 +32,7 @@ app.use(
     origin: [
       'http://localhost:5173',
       'https://bpmn-smart.vercel.app',
-      'https://bpmnsmart-production.up.railway.app',
+      'https://bpmnsmart.onrender.com',
     ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -88,7 +88,7 @@ app.use(
 app.listen(port, () => {
   const isProduction = process.env.NODE_ENV === 'production';
   const serverUrl = isProduction
-    ? `https://bpmnsmart-production.up.railway.app`
+    ? `https://bpmnsmart.onrender.com`
     : `http://localhost:${port}`;
 
   console.log(`Servidor corriendo en ${serverUrl}`);
