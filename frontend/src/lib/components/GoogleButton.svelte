@@ -4,7 +4,7 @@
 	import { isMaintenance } from 'store/maintenance';
 </script>
 
-{#if !isMaintenance}
+{#if !$isMaintenance}
 <a
 	href={`${PUBLIC_API_URL}/auth/google`}
 	data-sveltekit-reload
