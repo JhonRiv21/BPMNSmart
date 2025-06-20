@@ -4,7 +4,7 @@
     "forceConsistentCasingInFileNames": true,
     "target": "ESNext",
     "module": "ESNext",
-    "moduleResolution": "Bundler",
+    "moduleResolution": "node",
     "moduleDetection": "force",
     "esModuleInterop": true,
     "strict": true,
