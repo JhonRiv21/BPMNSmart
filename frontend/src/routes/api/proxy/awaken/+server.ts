@@ -1,4 +1,4 @@
-import { URL_BACKEND } from "$env/static/private";
+import { URL_BACKEND } from '$env/static/private';
 
 let awakenPromise: Promise<Response> | null = null;
 

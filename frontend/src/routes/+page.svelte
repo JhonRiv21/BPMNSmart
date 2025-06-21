@@ -8,7 +8,6 @@
 	import Modal from '$lib/components/Modal.svelte';
 
 	let modalMaintenance = $state<boolean>($isMaintenance);
-
 </script>
 
 <section>
@@ -113,12 +112,12 @@
 
 {#if isMaintenance}
 	{#if modalMaintenance}
-		<Modal 
+		<Modal
 			title="Aplicación en mantenimiento"
 			text="Estamos realizando tareas de mantenimiento programado para mejorar nuestro servicio. La aplicación estará temporalmente fuera de funcionamiento desde el 17/06 hasta el 23/06. Agradecemos su comprensión y paciencia."
 			setOnCancel={false}
 			textAction="Cerrar"
-			onAction={() => modalMaintenance = !modalMaintenance}
+			onAction={() => (modalMaintenance = !modalMaintenance)}
 		/>
 	{/if}
 {/if}
