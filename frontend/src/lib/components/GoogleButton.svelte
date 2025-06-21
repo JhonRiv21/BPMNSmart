@@ -30,7 +30,7 @@
 
 			if (!res.ok) throw new Error('Servidor no responde');
 			stopMessageRotation();
-			window.location.href = `${PUBLIC_API_URL}/auth/google`;
+			window.location.href = '/api/auth/google';
 		} catch (e) {
 			alert('Error conectando con el servidor. Intenta de nuevo.');
 			stopMessageRotation();
