@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { PUBLIC_API_URL } from '$env/static/public';
 	import Google from '$lib/assets/icons/Google.svelte';
 	import { isMaintenance } from 'store/maintenance';
 	import { fade } from 'svelte/transition';
@@ -28,7 +29,7 @@
 
 			if (!res.ok) throw new Error('Servidor no responde');
 			stopMessageRotation();
-			window.location.href = '/api/auth/google';
+			window.location.href = `${PUBLIC_API_URL}/auth/google`;
 		} catch (e) {
 			alert('Error conectando con el servidor. Intenta de nuevo.');
 			stopMessageRotation();
