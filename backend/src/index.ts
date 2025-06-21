@@ -6,9 +6,11 @@ import userRoutes from './routes/user.route.ts';
 import processRoutes from './routes/process.route.ts';
 import authRouter from './routes/auth.route.ts';
 import cookieParser from 'cookie-parser';
+import { PrismaClient } from '@prisma/client';
 
 const app = express();
 const port = process.env.PORT || 4000;
+const prisma = new PrismaClient();
 
 app.set('trust proxy', true);
 
@@ -68,6 +70,17 @@ app.use(passport.session());
 app.use('/auth', authRouter);
 app.use('/api/users', userRoutes);
 app.use('/api/process', processRoutes);
+
+// Wake up DB and backend
+app.get('/health', async (_req, res) => {
+  try {
+    await prisma.user.findFirst();
+    res.status(200).json({ status: 'ok', db: 'connected' });
+  } catch (e) {
+    console.error('Healthcheck failed:', e);
+    res.status(500).json({ status: 'fail', error: String(e) });
+  }
+});
 
 app.use((_req, res) => {
   res.status(404).json({ error: 'No encontrado' });
