@@ -72,11 +72,11 @@
 
 {#if showLoading}
 	<div transition:fade class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-		<div class="rounded-md bg-white px-6 py-4 shadow-xl text-center max-w-xs">
-			<div class="mb-4 animate-pulse text-lg font-semibold text-gray-700">
+		<div class="rounded-lg bg-white px-8 py-6 shadow-2xl text-center w-[90%] max-w-md sm:max-w-lg">
+			<div class="mb-6 animate-pulse text-xl font-semibold text-gray-700 sm:text-2xl">
 				{loadingMessage}
 			</div>
-			<div class="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
+			<div class="h-3 w-full bg-gray-200 rounded-full overflow-hidden">
 				<div class="h-full w-1/3 animate-loading-bar bg-blue-500"></div>
 			</div>
 		</div>
